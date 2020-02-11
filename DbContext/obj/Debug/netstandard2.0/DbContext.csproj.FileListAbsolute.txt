@@ -1,0 +1,5 @@
+C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\bin\Debug\netstandard2.0\DbContext.deps.json
+C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\bin\Debug\netstandard2.0\DbContext.dll
+C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\DbContext.csprojAssemblyReference.cache
+C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\DbContext.AssemblyInfoInputs.cache
+C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\DbContext.AssemblyInfo.cs

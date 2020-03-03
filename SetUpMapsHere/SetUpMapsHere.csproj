@@ -13,6 +13,10 @@
     <Folder Include="backup\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ASDDbContext\ASDDbContext.csproj" />
+  </ItemGroup>
+
 
 
 </Project>

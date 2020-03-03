@@ -1,7 +1,8 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "OSM";
 }
+@using SetUpMapsHere.Models.Maps
+@model OSMViewModel
 
 <h1>Open Street Maps</h1>
 <head>
@@ -19,7 +20,6 @@
     <form id="form1" runat="server" asp-controller="Map" asp-action="OSM">
     </form>
     <div id="mapid">
-
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
         <script>
@@ -50,7 +50,7 @@
             marker1.bindPopup("<b>RastaBus</b><br>Up yu bumpa!").openPopup();
             var popup1 = L.popup()
                 .setLatLng([42.664567, 23.305932])
-                .setContent("Sellin' weed, lmao")
+                .setContent("Weed lmao")
                 .openOn(mymap);
             var latlngs = [
                 [42.657705, 23.312945],
@@ -63,7 +63,7 @@
                 [42.666888, 23.347535],
                 [42.667235, 23.352191]
             ];
-            
+            //var latlngs2 = JsonConvert.DeserializeObject(@Model.Json);
             
             var i = 0;
             function looper()
@@ -72,7 +72,7 @@
                 marker2.setLatLng([42.684, 23.318 - i]).addTo(mymap);
                 i += 0.0005;
                 if (true) {
-                    setTimeout(looper, 50)
+                    setTimeout(looper, 1000)
                 }
             }
             looper();
@@ -82,6 +82,7 @@
             //}
             //while (i < 0.2);
             var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+            //var polyline = L.polyline(latlngs2, { color: 'blue' }).addTo(mymap);
             var popup = L.popup();
             function onMapClick(e)
             {
@@ -90,18 +91,27 @@
                 .setContent(e.latlng.toString())
                 .openOn(mymap);
             }
+
             
             mymap.on('click', onMapClick);
+
+            if(navigator.geolocation)
+            navigator.geolocation.getCurrentPosition(onPositionUpdate);
+            else
+            alert("navigator.geolocation is not available");
 
             function getLocation()
             {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
                 function showPosition(position)
                 {
-                    var coordinates = position.coordinates;
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    L.marker([lat, lng]).addTo(mymap);
                     
                 }
             }
 
     </script>
+    <h1>@Model.Json</h1>
 </body>

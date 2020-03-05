@@ -22,7 +22,8 @@
     <div id="mapid">
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
-        <script>
+    <button onclick="random()">Text</button>
+    <script>
         	var mymap = L.map('mapid').setView([42.686, 23.319], 13);
 
             L.tileLayer
@@ -46,7 +47,7 @@
                 [42.686, 23.320],
                 [42.685, 23.318]]
             ).addTo(mymap);
-            
+
             marker1.bindPopup("<b>RastaBus</b><br>Up yu bumpa!").openPopup();
             var popup1 = L.popup()
                 .setLatLng([42.664567, 23.305932])
@@ -63,8 +64,7 @@
                 [42.666888, 23.347535],
                 [42.667235, 23.352191]
             ];
-            //var latlngs2 = JsonConvert.DeserializeObject(@Model.Json);
-            
+
             var i = 0;
             function looper()
             {
@@ -81,35 +81,41 @@
             //    i += 0.01;
             //}
             //while (i < 0.2);
-            var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+            var polyline1 = L.polyline(latlngs, { color: 'green' }).addTo(mymap);
+            
             //var polyline = L.polyline(latlngs2, { color: 'blue' }).addTo(mymap);
+
+            var jsonlatlngs = JSON.parse("@Model.Json")
+            L.polyline(jsonlatlngs, { color: 'red' }).addTo(mymap);
+            L.marker(jsonlatlngs[3]).addTo(mymap);
+
+
             var popup = L.popup();
             function onMapClick(e)
             {
+                alert(e.latlng)
                 popup
                 .setLatLng(e.latlng)
                 .setContent(e.latlng.toString())
                 .openOn(mymap);
             }
 
-            
             mymap.on('click', onMapClick);
-
-            if(navigator.geolocation)
-            navigator.geolocation.getCurrentPosition(onPositionUpdate);
-            else
-            alert("navigator.geolocation is not available");
-
             function getLocation()
             {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-                function showPosition(position)
+                if (navigator.geolocation)
                 {
-                    var lat = position.coords.latitude;
-                    var lng = position.coords.longitude;
-                    L.marker([lat, lng]).addTo(mymap);
-                    
+                    navigator.geolocation.getCurrentPosition(showPosition);
                 }
+            }
+            function showPosition(position)
+            {
+                alert(position.coords.latitude + " " + position.coords.longitude);
+                L.marker([position.coords.latitude, position.coords.longitude]).addTo(mymap);
+            }
+            function random()
+            {
+                alert("@Model.Json")
             }
 
     </script>

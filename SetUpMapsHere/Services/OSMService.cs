@@ -20,7 +20,7 @@ namespace SetUpMapsHere.Services
             var routes = db.BusLines.Select(x => new
             {
                 type = "PolyLine",
-                coordinates = JsonConvert.SerializeObject(x.Route.Select(y => new double[] { y.Point.X, y.Point.Y }), Formatting.Indented)
+                coordinates = JsonConvert.SerializeObject(x.Route.Select(y => new double[] { y.Point.X, y.Point.Y }), Formatting.None)
             });
             return routes.FirstOrDefault().coordinates;
         }

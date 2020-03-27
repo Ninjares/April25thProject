@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SetUpMapsHere.Models.Maps;
 using SetUpMapsHere.Services;
 
@@ -26,7 +27,8 @@ namespace SetUpMapsHere.Controllers
             string routes = OSMService.GetAllRoutes();
             var model = new OSMViewModel
             {
-                Json = routes
+                Json = routes,
+                //Points = JsonConvert.DeserializeObject<double[][,]>(routes)
             };
             return View(model);        
         }

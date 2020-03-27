@@ -8,5 +8,6 @@ namespace SetUpMapsHere.Models.Maps
     public class OSMViewModel
     {
         public string Json { get; set; }
+        public double[][,] Points { get; set; }
     }
 }

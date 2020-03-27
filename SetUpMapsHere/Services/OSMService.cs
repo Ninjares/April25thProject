@@ -19,10 +19,9 @@ namespace SetUpMapsHere.Services
         {
             var routes = db.BusLines.Select(x => new
             {
-                type = "PolyLine",
-                coordinates = JsonConvert.SerializeObject(x.Route.Select(y => new double[] { y.Point.X, y.Point.Y }), Formatting.None)
+                coordinates = x.Route.OrderBy(y => y.RowPosition).Select(y => new double[] { y.Point.X, y.Point.Y })
             });
-            return routes.FirstOrDefault().coordinates;
+            return JsonConvert.SerializeObject(routes);
         }
     }
 }

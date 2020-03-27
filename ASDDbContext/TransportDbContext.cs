@@ -1,4 +1,5 @@
 ﻿using System;
+using ASDDbContext.Models;
 using ASPDbContext.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ namespace ASPDbContext
         public DbSet<LinePoint> LinePoints { get; set; }
         public DbSet<LineStop> LineStops { get; set; }
         public DbSet<Point> Points { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TransportASP;Integrated Security=True;");
@@ -40,6 +43,15 @@ namespace ASPDbContext
                 lp.HasKey(x => new { x.LineId, x.PointId, x.RowPosition });
                 lp.HasOne(x => x.Point).WithMany(x => x.LinePoints).HasForeignKey(x => x.PointId);
                 lp.HasOne(x => x.Line).WithMany(x => x.Route).HasForeignKey(x => x.LineId);
+            });
+            modelBuilder.Entity<User>((u) =>
+            {
+                u.HasKey(x => x.Id);
+                u.HasOne(x => x.Role).WithMany(x => x.Users).HasForeignKey(x => x.RoleId);
+            });
+            modelBuilder.Entity<Role>((r) =>
+            {
+                r.HasKey(x => x.Id);
             });
         }
         

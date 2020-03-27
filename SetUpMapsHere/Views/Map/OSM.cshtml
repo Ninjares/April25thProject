@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
-    <style>#mapid { height: 600px; }</style>
+    <style>#mapid { height: 700px; }</style>
 </head>
 
 <body>
@@ -48,22 +48,11 @@
                 [42.685, 23.318]]
             ).addTo(mymap);
 
-            marker1.bindPopup("<b>RastaBus</b><br>Up yu bumpa!").openPopup();
+            marker1.bindPopup("<b>Please</b><br>Only presentable stuff!").openPopup();
             var popup1 = L.popup()
                 .setLatLng([42.664567, 23.305932])
-                .setContent("Weed lmao")
+                .setContent("Appropriate text")
                 .openOn(mymap);
-            var latlngs = [
-                [42.657705, 23.312945],
-                [42.663141, 23.323985],
-                [42.664285, 23.336796],
-                [42.665129, 23.337911],
-                [42.665145, 23.341699],
-                [42.665086, 23.341988],
-                [42.665614, 23.342632],
-                [42.666888, 23.347535],
-                [42.667235, 23.352191]
-            ];
 
             var i = 0;
             function looper()
@@ -81,14 +70,19 @@
             //    i += 0.01;
             //}
             //while (i < 0.2);
-            var polyline1 = L.polyline(latlngs, { color: 'green' }).addTo(mymap);
+            //var polyline1 = L.polyline(latlngs, { color: '#000000' }).addTo(mymap);
             
-            //var polyline = L.polyline(latlngs2, { color: 'blue' }).addTo(mymap);
+        var jsonstring = "@Model.Json".replace(/&quot;/g, "\"");
+        var jsonlatlngs = JSON.parse(jsonstring);
 
-            var jsonlatlngs = JSON.parse("@Model.Json")
-            L.polyline(jsonlatlngs, { color: 'red' }).addTo(mymap);
-            L.marker(jsonlatlngs[3]).addTo(mymap);
-
+            
+            function allroutes(json, index, arr)
+            {
+                L.polyline(json.coordinates, { color: 'blue' }).addTo(mymap);
+            }
+            jsonlatlngs.forEach(allroutes);
+       // L.polyline("Model.Points[0]").addTo(mymap);
+       // L.marker([Model.Points[0][0,0], Model.Points[0][0,1]]).addTo(mymap);
 
             var popup = L.popup();
             function onMapClick(e)
@@ -115,7 +109,8 @@
             }
             function random()
             {
-                alert("@Model.Json")
+                alert(jsonstring)
+                alert(jsonlatlngs[0].coordinates)
             }
 
     </script>

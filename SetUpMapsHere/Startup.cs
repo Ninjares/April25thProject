@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ASDDbContext.Models;
 using ASPDbContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,11 +27,16 @@ namespace SetUpMapsHere
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TransportDbContext>();
+            services.AddDefaultIdentity<IdentityUser>(options => {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedEmail = false;
+            }).AddEntityFrameworkStores<TransportDbContext>().AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddTransient<IOSMService, OSMService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddIdentity<User, Role>().AddEntityFrameworkStores<TransportDbContext>().AddDefaultTokenProviders();
-            //services.AddTransient<SignInManager<User>>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +58,7 @@ namespace SetUpMapsHere
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

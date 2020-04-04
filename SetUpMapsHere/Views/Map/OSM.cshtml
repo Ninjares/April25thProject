@@ -65,12 +65,6 @@
                 }
             }
             looper();
-            //do
-            //{
-            //    i += 0.01;
-            //}
-            //while (i < 0.2);
-            //var polyline1 = L.polyline(latlngs, { color: '#000000' }).addTo(mymap);
             
         var jsonstring = "@Model.Json".replace(/&quot;/g, "\"");
         var jsonlatlngs = JSON.parse(jsonstring);
@@ -78,7 +72,7 @@
             
             function allroutes(json, index, arr)
             {
-                L.polyline(json.coordinates, { color: 'blue' }).addTo(mymap);
+                L.polyline(json.coordinates, { color: json.ColorHex }).addTo(mymap);
             }
             jsonlatlngs.forEach(allroutes);
        // L.polyline("Model.Points[0]").addTo(mymap);

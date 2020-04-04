@@ -1,5 +1,4 @@
-﻿using ASDDbContext.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SetUpMapsHere.Services;
 using System;
@@ -11,12 +10,10 @@ namespace SetUpMapsHere.Controllers
 {
     public class UserController : Controller
     {
-        public IUserService UserService { get; set; }
-        public SignInManager<User> SignInManager { get; set; }
-        public UserManager<User> UserManager { get; set; }
-        public UserController(IUserService service, UserManager<User> userManager, SignInManager<User> signInManager)
+        private SignInManager<IdentityUser> SignInManager { get; set; }
+        private UserManager<IdentityUser> UserManager { get; set; }
+        public UserController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
-            this.UserService = service;
             this.UserManager = userManager;
             this.SignInManager = signInManager;
         }
@@ -35,21 +32,28 @@ namespace SetUpMapsHere.Controllers
         [HttpPost("/User/Login")]
         public async Task<IActionResult> Login(Models.User.Login login)
         {
-            var user = UserService.GetUser(login.Username, login.Password);
-            if (user == null) return Redirect("/User/Login");
-            else
-            {
-                await SignInManager.SignInAsync(user, true);
+            var signin = await SignInManager.PasswordSignInAsync(login.Username, login.Password, true, false);
+            if (signin.Succeeded)
                 return Redirect("/");
-            }
+            else return Redirect("/User/Login");
         }
         [HttpPost("/User/Register")]
-        public IActionResult Register(Models.User.Register register)
+        public async Task<IActionResult> Register(Models.User.Register register)
         {
             if (register.Password == register.ConfirmPassword)
             {
-                bool success = UserService.RegisterUser(register.Username, register.Email, register.Password);
-                if (success) return Redirect("/");
+                var result = await UserManager.CreateAsync(new IdentityUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                     
+                    UserName = register.Username,
+                    Email = register.Email,
+                    EmailConfirmed = true,
+                    PhoneNumber = "1234567890"
+
+                }, register.Password);
+                if (result.Succeeded)
+                    return Redirect("/");
                 else return Redirect("/User/Register");
             }
             else return Redirect("/User/Register");

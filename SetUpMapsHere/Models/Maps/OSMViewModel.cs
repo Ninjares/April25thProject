@@ -7,7 +7,7 @@ namespace SetUpMapsHere.Models.Maps
 {
     public class OSMViewModel
     {
-        public string Json { get; set; }
-        public double[][,] Points { get; set; }
+        public string JsonRoutes { get; set; }
+        public string JsonStops { get; set; }
     }
 }

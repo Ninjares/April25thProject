@@ -33,9 +33,10 @@ namespace SetUpMapsHere
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.SignIn.RequireConfirmedEmail = false;
-            }).AddEntityFrameworkStores<TransportDbContext>().AddDefaultTokenProviders();
+            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<TransportDbContext>().AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddTransient<IOSMService, OSMService>();
+            services.AddSignalR();
 
         }
 

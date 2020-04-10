@@ -24,11 +24,12 @@ namespace SetUpMapsHere.Controllers
         [HttpGet("/Map/OSM")]
         public IActionResult OSM()
         {
-            string routes = OSMService.GetAllRoutes();
+            var param = new string[] {  };
+            string routes = OSMService.GetAllRoutes(param);
             var model = new OSMViewModel
             {
-                Json = routes,
-                //Points = JsonConvert.DeserializeObject<double[][,]>(routes)
+                JsonRoutes = routes,
+                JsonStops = OSMService.GetAllStops(param)
             };
             return View(model);        
         }

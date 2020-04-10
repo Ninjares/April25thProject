@@ -66,17 +66,32 @@
             }
             looper();
             
-        var jsonstring = "@Model.Json".replace(/&quot;/g, "\"");
-        var jsonlatlngs = JSON.parse(jsonstring);
+        var jsonroute = "@Model.JsonRoutes".replace(/&quot;/g, "\"");
+        var routes = JSON.parse(jsonroute);
 
-            
             function allroutes(json, index, arr)
             {
                 L.polyline(json.coordinates, { color: json.ColorHex }).addTo(mymap);
             }
-            jsonlatlngs.forEach(allroutes);
-       // L.polyline("Model.Points[0]").addTo(mymap);
-       // L.marker([Model.Points[0][0,0], Model.Points[0][0,1]]).addTo(mymap);
+            routes.forEach(allroutes);
+
+
+        var StopIcon = L.icon({
+            iconUrl: "https://cdn3.iconfinder.com/data/icons/transport-29/100/22-512.png",
+
+            iconSize: [40, 40], // size of the icon
+            iconAnchor: [20, 40], // point of the icon which will correspond to marker's location
+        });
+
+        var jsonstops = "@Model.JsonStops".replace(/&quot;/g, "\"");
+        var stops = JSON.parse(jsonstops);
+
+            function allstops(stops, index, arr)
+            {
+                L.marker(stops.coordinates, { icon: StopIcon }).bindPopup(stops.StopList).addTo(mymap);
+            }
+            stops.forEach(allstops)
+
 
             var popup = L.popup();
             function onMapClick(e)
@@ -103,10 +118,10 @@
             }
             function random()
             {
-                alert(jsonstring)
-                alert(jsonlatlngs[0].coordinates)
+                alert(jsonstops)
+                alert(stops[0].coordinates)
             }
 
     </script>
-    <h1>@Model.Json</h1>
+    <h1>@Model.JsonStops</h1>
 </body>

@@ -1,8 +1,0 @@
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\bin\Debug\netstandard2.0\ASPDbContext.deps.json
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\bin\Debug\netstandard2.0\ASPDbContext.dll
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\bin\Debug\netstandard2.0\ASPDbContext.pdb
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\ASPDbContext.csprojAssemblyReference.cache
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\ASPDbContext.AssemblyInfoInputs.cache
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\ASPDbContext.AssemblyInfo.cs
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\ASPDbContext.dll
-C:\Users\mo2-bawk\Desktop\csharp-web\SetUpMapsHere\DbContext\obj\Debug\netstandard2.0\ASPDbContext.pdb

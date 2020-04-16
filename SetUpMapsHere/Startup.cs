@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASPDbContext;
+using ASPDbContext.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,15 +28,18 @@ namespace SetUpMapsHere
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TransportDbContext>();
-            services.AddDefaultIdentity<IdentityUser>(options => {
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.SignIn.RequireConfirmedEmail = false;
-            }).AddRoles<IdentityRole>().AddEntityFrameworkStores<TransportDbContext>().AddDefaultTokenProviders();
+            }).AddRoles<ApplicationRole>().AddEntityFrameworkStores<TransportDbContext>().AddDefaultUI().AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddTransient<IOSMService, OSMService>();
+            services.AddTransient<IAdminService, AdminServices>();
+            services.AddTransient<IDriverService, DriverService>();
+            
             services.AddSignalR();
 
         }
@@ -55,7 +59,7 @@ namespace SetUpMapsHere
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
 
             app.UseAuthorization();

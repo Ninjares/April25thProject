@@ -17,10 +17,6 @@ namespace SetUpMapsHere.Controllers
         {
             OSMService = service;
         }
-        public IActionResult Google()
-        {
-            return View("Google", "Map");
-        }
         [HttpGet("/Map/OSM")]
         public IActionResult OSM()
         {

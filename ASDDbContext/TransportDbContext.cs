@@ -1,11 +1,12 @@
 ﻿using System;
 using ASPDbContext.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASPDbContext
 {
-    public class TransportDbContext : IdentityDbContext
+    public class TransportDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public TransportDbContext() : base() { }
         public TransportDbContext(DbContextOptions<TransportDbContext> options) : base(options)
@@ -30,6 +31,7 @@ namespace ASPDbContext
             {
                 b.HasKey(x => x.BusId);
                 b.HasOne(x => x.Line).WithMany(x => x.Buses).HasForeignKey(x => x.LineId);
+                b.HasOne(x => x.Driver).WithOne(x => x.Bus).HasForeignKey<ApplicationUser>(x => x.BusId);
             });
             modelBuilder.Entity<BusStop>((bs) =>
             {
@@ -51,6 +53,12 @@ namespace ASPDbContext
             modelBuilder.Entity<BusLine>(bl =>
             {
                 bl.Property(x => x.ColorHex).IsUnicode(false).HasMaxLength(7);
+            });
+            modelBuilder.Entity<ApplicationUserRole>(aur =>
+            {
+                aur.HasKey(x => new { x.UserId, x.RoleId });
+                aur.HasOne(x => x.Role).WithMany(x => x.RoleUsers).HasForeignKey(x => x.RoleId).IsRequired(true);
+                aur.HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId).IsRequired(true);
             });
         }
         

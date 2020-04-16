@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ASDDbContext\ASDDbContext.csproj" />
+    <ProjectReference Include="..\ASDDbContext\ASPDbContext.csproj" />
   </ItemGroup>
 
 

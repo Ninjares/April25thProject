@@ -13,5 +13,6 @@ namespace ASPDbContext.Models
         public bool IsActive { get; set; }
         public int LineId { get; set; }
         public BusLine Line { get; set; }
+        public ApplicationUser Driver { get; set; }
     }
 }

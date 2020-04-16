@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ASPDbContext.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SetUpMapsHere.Services;
 using System;
@@ -10,10 +11,10 @@ namespace SetUpMapsHere.Controllers
 {
     public class UserController : Controller
     {
-        private SignInManager<IdentityUser> SignInManager { get; set; }
-        private UserManager<IdentityUser> UserManager { get; set; }
-        private RoleManager<IdentityRole> RoleManager { get; set; }
-        public UserController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        private SignInManager<ApplicationUser> SignInManager { get; set; }
+        private UserManager<ApplicationUser> UserManager { get; set; }
+        private RoleManager<ApplicationRole> RoleManager { get; set; }
+        public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<ApplicationRole> roleManager)
         {
             this.UserManager = userManager;
             this.SignInManager = signInManager;
@@ -54,13 +55,14 @@ namespace SetUpMapsHere.Controllers
                 var roleExists = await RoleManager.RoleExistsAsync(roleName);
                 if (!roleExists)
                 {
-                    await RoleManager.CreateAsync(new IdentityRole
+                    await RoleManager.CreateAsync(new ApplicationRole
                     {
-                        Name = roleName
+                        Name = roleName,
+                       
                     });
                 }
 
-                var result = await UserManager.CreateAsync(new IdentityUser
+                var result = await UserManager.CreateAsync(new ApplicationUser
                 {
                     Id = Guid.NewGuid().ToString(),
                      

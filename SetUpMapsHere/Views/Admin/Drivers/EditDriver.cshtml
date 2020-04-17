@@ -1,7 +1,54 @@
-﻿
+﻿@model SetUpMapsHere.Models.Admin.DriverDetails
 @{
     ViewData["Title"] = "EditDriver";
 }
-
+<style>
+    .redButton {
+        background-color: #f44336;
+    }
+</style>
 <h1>EditDriver</h1>
 
+<section class="py-5">
+    <div class="container">
+        <h1 style="margin: 2%; text-align: center;">Driver</h1>
+        <div>
+            <form method="post" href="/Admin/Drivers/EditDriver">
+                <div class="form-group">
+                    <label for="DriveName">Driver Name</label>
+                    <input type="text" readonly class="form-control" id="DriverName" name="DriverName" value="@Model.DriverName">
+                </div>
+                <div class="form-group">
+                    <label for="BusId">Bus Id</label>
+                    <input type="text" readonly class="form-control" id="BusId" name="BusId" value="@(Model.BusId.HasValue ? Model.BusId.Value.ToString() : "N/a")">
+                </div>
+                <div class="form-group">
+                    <label for="BusDetails">Bus Details</label>
+                    <input type="text" readonly class="form-control" id="BusDetails" name="BusDetails" value="@(Model.BusId.HasValue ? $"{Model.CurrentLine} - {Model.CurrentBus}" : "N/a")">
+                </div>
+                <div class="form-group">
+                    <label for="IdBus">Item Id</label>
+                    <select id="IdBus" class="form-control" name="IdBus">
+                        @foreach (var bus in Model.AllBuses)
+                        {
+                            <option value="@bus.BusId">@bus.LineName - @bus.BusName</option>
+                        }
+                    </select>
+                </div>
+                <input type="hidden" id="IdDriver" name="IdDriver" value="@Model.DriverId">
+                <div class="form-group text-center">
+                    <div class="button-holder">
+                        <input type="submit" class="btn btn-primary btn-block text-uppercase" value="Assign" />
+                    </div>
+                </div>
+            </form>
+            <br />
+            <form method="post" href="/Admin/Drivers/Dismiss" asp-action="DismissDriver">
+                <div class="button-holder">
+                    <input type="hidden" id="DriverId" name="DriverId" value="@Model.DriverId">
+                    <input type="submit" class="btn redButton btn-primary btn-block text-uppercase" value="Dismiss" />
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

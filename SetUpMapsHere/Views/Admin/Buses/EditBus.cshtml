@@ -1,0 +1,45 @@
+﻿@model SetUpMapsHere.Models.Admin.EditBus
+@{
+    ViewData["Title"] = "AssignBus";
+}
+    <style>
+        .redButton {
+            background-color: #f44336;
+        }
+    </style>
+<h1>EditBus</h1>
+
+<section class="py-5">
+    <div class="container">
+        <h1 style="margin: 2%; text-align: center;">New Bus</h1>
+        <div>
+            <form method="post" href="/Admin/Buses/EditBus">
+                <div class="form-group">
+                    <label for="BusName">Bus Name</label>
+                    <input type="text" class="form-control" id="BusName" name="BusName" placeholder="Bus Name" value="@Model.Name">
+                </div>
+                <div class="form-group">
+                    <label for="LineId">Assign Line</label>
+                    <select id="LineId" class="form-control" name="LineId">
+                        @foreach (var line in Model.LineOptions)
+                        {
+                            <option value="@line.LineId">@line.LineName</option>
+                        }
+                    </select>
+                </div>
+                <input type="hidden" id="BusId" name="BusId" value="@Model.Id" />
+                <div class="form-group text-center">
+                    <div class="button-holder">
+                        <input type="submit" class="btn btn-primary btn-block text-uppercase" value="Save" />
+                    </div>
+                </div>
+            </form>
+            <form method="post" href="/Admin/Buses/DeleteBus" asp-action="DeleteBus">
+                <div class="button-holder">
+                    <input type="hidden" id="BusId" name="BusId" value="@Model.Id" />
+                    <input type="submit" class="btn redButton btn-primary btn-block text-uppercase" value="Remove" />
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

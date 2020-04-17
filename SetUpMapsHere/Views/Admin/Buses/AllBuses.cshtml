@@ -3,9 +3,14 @@
 @{
     ViewData["Title"] = "AllBuses";
 }
+<style>
+     .btnmrgn { /* You Can Name it what you want*/
+        margin-bottom: 15px;
+    }
+</style>
 
 <div class="button-holder d-flex justify-content-center">
-    <button type="submit" class="btn btn-dark">Add bus</button>
+    <a href="/Admin/Buses/CreateBus" class="btn btn-dark btnmrgn">Add bus</a>
 </div>
 
 <table class="table">
@@ -28,7 +33,7 @@
             <th>@bus.IsActive</th>
             <th>
                 <div class="button-holder">
-                    <a href="@bus.BusId" class="btn btn-info text-uppercase">Edit</a>
+                    <a href="EditBus?BusId=@int.Parse(bus.BusId)" class="btn btn-info text-uppercase">Edit</a>
                 </div>
             </th>
         </tr>

@@ -33,7 +33,7 @@ namespace SetUpMapsHere.Controllers
                 Line = x.Bus == null ? "Not assigned" : x.Bus.Line.Name,
                 Id = x.Id
             }).ToList();
-            return View("Drivers/AllDrivers",model);
+            return View("Drivers/AllDrivers", model);
         }
         [HttpGet("/Admin/Roles/AllUsers")]
         public IActionResult AllUsers()
@@ -55,18 +55,74 @@ namespace SetUpMapsHere.Controllers
             return View("Buses/AllBuses", model);
         }
 
+        [HttpGet("/Admin/Buses/CreateBus")]
+        public IActionResult CreateBus()
+        {
+            var model = AdminServices.GetLineOptions();
+            return View("Buses/CreateBus", model);
+        }
+        [HttpPost("/Admin/Buses/CreateBus")]
+        public IActionResult CreateBusPost(string BusName, int LineId)
+        {
+            bool result = AdminServices.CreateBus(BusName, LineId);
+            if (result)
+                return Redirect("/Admin/Buses/AllBuses");
+            else throw new Exception("Failed Creation");
+        }
+        [HttpGet("/Admin/Buses/EditBus")]
+        public IActionResult EditBus(int BusId)
+        {
+            var model = AdminServices.GetBusDetails(BusId);
+            return View("Buses/EditBus", model);
+        }
+        [HttpPost("/Admin/Buses/EditBus")]
+        public IActionResult EditBusPost(int BusId, string BusName, int LineId)
+        {
+            AdminServices.EditBus(BusId, BusName, LineId);
+            return Redirect("/Admin/Buses/AllBuses");
+        }
+        [HttpPost("/Admin/Buses/DeleteBus")]
+        public IActionResult DeleteBus(int BusId)
+        {
+            AdminServices.DeleteBus(BusId);
+            return Redirect("/Admin/Buses/AllBuses");
+        }
+
+        [HttpGet("/Admin/Drivers/EditDriver")]
+        public async Task<IActionResult> EditDriver(string DriverId)
+        {
+            var user = await UserManager.FindByIdAsync(DriverId);
+            Bus bus = null;
+            if (user.BusId.HasValue) bus = AdminServices.Getbus(user.BusId.Value);
+            var model = new DriverDetails()
+            {
+                DriverId = DriverId,
+                DriverName = user.UserName,
+                BusId = user.BusId,
+                CurrentBus = user.BusId.HasValue ? bus.BusLoginHash : null,
+                CurrentLine = user.BusId.HasValue ? bus.Line.Name : null,
+                AllBuses = AdminServices.GetAllBusOptions()
+            };
+            return View("Drivers/EditDriver", model);
+        }
+        [HttpPost("/Admin/Drivers/EditDriver")]
+        public IActionResult EditDriverPost(DriverInput driverInput)
+        {
+            var successful = AdminServices.AssignBusToDriver(driverInput.DriverId, driverInput.IdBus);
+            if (successful)
+                return Redirect("/Admin/Drivers/AllDrivers");
+            else throw new Exception("Failed assignment");
+        }
+        [HttpPost("/Admin/Drivers/Dismiss")]
+        public IActionResult DismissDriver(string DriverId)
+        {
+            bool result = AdminServices.DismissDriver(DriverId);
+            if(result)
+            return Redirect("/Admin/Drivers/AllDrivers");
+            else throw new Exception("Failed dismissal");
+        }
 
 
-        [HttpGet("/Admin/Drivers/CreateDriver")]
-        public IActionResult CreateDriver()
-        {
-            return View();
-        }
-        [HttpGet("/Admin/Users/EditDriver")]
-        public IActionResult EditDriver()
-        {
-            return View();
-        }
         [HttpGet("/Admin/Users/RoleChange")]
         public async Task<IActionResult> ChangeRole(string UserId)
         {

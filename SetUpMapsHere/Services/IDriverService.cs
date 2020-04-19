@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SetUpMapsHere.Services
 {
-    interface IDriverService
+    public interface IDriverService
     {
-        public string GetStops(string ling);
-        public string GetRoute(string line);
+        public string GetStops(string userId);
+        public string GetRoute(string userId);
     }
 }

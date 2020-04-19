@@ -14,15 +14,19 @@ namespace SetUpMapsHere.Services
         {
             this.db = db;
         }
-        public string GetRoute(string line)
+        public string GetRoute(string UserId)
         {
-            var route = db.BusLines.FirstOrDefault(x => x.Name == line);
+            var route = db.Users.Where(x => x.Id==UserId).Select(x => x.Bus.Line.Route.OrderBy(y => y.RowPosition).Select(x => new double[] { x.Point.X, x.Point.Y }));
             return JsonConvert.SerializeObject(route);
         }
 
-        public string GetStops(string line)
+        public string GetStops(string UserId)
         {
-            var stops = db.BusLines.FirstOrDefault(x => x.Name == line).Stops;
+            var stops = db.Users.Where(x => x.Id == UserId).Select(x => x.Bus.Line.Stops.Select(x => new
+            {
+                x.BusStop.Address,
+                Point = new double[] { x.BusStop.Point.X, x.BusStop.Point.Y }
+            }));
             return JsonConvert.SerializeObject(stops);
         }
     }

@@ -36,7 +36,7 @@ namespace SetUpMapsHere.Controllers
         [HttpPost("/User/Login")]
         public async Task<IActionResult> Login(Models.User.Login login)
         {
-            var signin = await SignInManager.PasswordSignInAsync(login.Username, login.Password, true, false);
+            var signin = await SignInManager.PasswordSignInAsync(login.Username, login.Password, true, true);
             if (signin.Succeeded)
                 return Redirect("/");
             else return Redirect("/User/Login");

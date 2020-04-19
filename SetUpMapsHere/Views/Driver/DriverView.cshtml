@@ -37,46 +37,28 @@
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
 
-            var marker1 = L.marker([42.686, 23.319]).addTo(mymap);
-            var marker2 = L.marker([42.684, 23.318]).addTo(mymap);
-            var circle = L.circle([42.686, 23.320], {
-                color: 'blue',
-                fillColor: '#f03',
-                fillOpacity: 0.2,
-                radius: 100
-            }).addTo(mymap);
-            var polygon = L.polygon([
-                [42.676, 23.320],
-                [42.686, 23.320],
-                [42.685, 23.318]]
-            ).addTo(mymap);
 
-            marker1.bindPopup("<b>Please</b><br>Only presentable stuff!").openPopup();
-            var popup1 = L.popup()
-                .setLatLng([42.664567, 23.305932])
-                .setContent("Appropriate text")
-                .openOn(mymap);
-
-            var i = 0;
+        var movingmarker = L.marker([42.686, 23.319]).addTo(mymap);
+        var i = 0.01
             function looper()
             {
-                L.marker().setLatLng([42.674, 23.35 + i]).addTo(mymap);
-                marker2.setLatLng([42.684, 23.318 - i]).addTo(mymap);
-                i += 0.0005;
+                i = i * (-1);
+                movingmarker.setLatLng([42.684, 23.318 + i]).addTo(mymap);
                 if (true) {
                     setTimeout(looper, 1000)
                 }
             }
-            looper();
+        looper();
 
         var jsonroute = "@Model.Route".replace(/&quot;/g, "\"");
         var routes = JSON.parse(jsonroute);
+
+        var route = L.polyline(routes[0], { color: 'red' }).addTo(mymap)
 
             function allroutes(json, index, arr)
             {
                 L.polyline(json.coordinates, { color: json.ColorHex }).addTo(mymap);
             }
-            routes.forEach(allroutes);
 
 
         var StopIcon = L.icon({
@@ -97,11 +79,11 @@
         var jsonstops = "@Model.Stops".replace(/&quot;/g, "\"");
         var stops = JSON.parse(jsonstops);
 
-            function allstops(stops, index, arr)
+            function allstops(stop, index, arr)
             {
-                L.marker(stops.coordinates, { icon: StopIcon }).bindPopup(stops.StopList).addTo(mymap);
-            }
-            stops.forEach(allstops)
+                L.marker(stop.Point, { icon: StopIcon }).bindPopup(stop.Address).addTo(mymap);
+        }
+        stops[0].forEach(allstops);
 
 
             var popup = L.popup();
@@ -129,10 +111,13 @@
             }
             function random()
             {
-                alert(jsonstops)
-                alert(stops[0].coordinates)
+                alert(stops)
+                alert(stops[0][0])
+                alert(stops.StopAddress)
+                alert(stops[0][0].Point)
             }
 
     </script>
     <h1>@Model.Route</h1>
+    <h2>@Model.Stops</h2>
 </body>

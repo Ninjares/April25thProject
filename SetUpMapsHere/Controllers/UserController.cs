@@ -79,7 +79,7 @@ namespace SetUpMapsHere.Controllers
             }
             else return Redirect("/User/Register");
         }
-
+        [HttpGet("/User/Logout")]
         public async Task<IActionResult> LogOut()
         {
             await SignInManager.SignOutAsync();

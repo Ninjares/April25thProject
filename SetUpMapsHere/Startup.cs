@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SetUpMapsHere.Hub;
 using SetUpMapsHere.Services;
 
 namespace SetUpMapsHere
@@ -35,11 +36,16 @@ namespace SetUpMapsHere
                 options.Password.RequireNonAlphanumeric = false;
                 options.SignIn.RequireConfirmedEmail = false;
             }).AddRoles<ApplicationRole>().AddEntityFrameworkStores<TransportDbContext>().AddDefaultUI().AddDefaultTokenProviders();
+            services.ConfigureApplicationCookie(options => 
+            {
+                options.LoginPath = $"/User/Login";
+                options.LogoutPath = $"/User/Logout";
+            });
             services.AddControllersWithViews();
             services.AddTransient<IOSMService, OSMService>();
             services.AddTransient<IAdminService, AdminServices>();
             services.AddTransient<IDriverService, DriverService>();
-            
+            services.AddRazorPages();
             services.AddSignalR();
 
         }
@@ -59,7 +65,6 @@ namespace SetUpMapsHere
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
             app.UseRouting();
 
             app.UseAuthorization();
@@ -67,9 +72,11 @@ namespace SetUpMapsHere
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<GpsHub>("/gps");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

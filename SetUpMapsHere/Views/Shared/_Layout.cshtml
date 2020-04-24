@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using ASPDbContext.Models
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,19 +27,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/Driver/DriverView">Drive</a>
+                        </li>
                         @if (String.IsNullOrEmpty(User.Identity.Name))
                         {
-                        <li class="nav-item rounded-right">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item rounded-right">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
-                        </li>
+                            <li class="nav-item rounded-right">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item rounded-right">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+                            </li>
                         }
                         @if (!String.IsNullOrEmpty(User.Identity.Name))
                         {
                             <li>
-                                <a class="nav-link float-lg-right">Welcome, @User.Identity.Name.</a>
+                                <a class="nav-link float-lg-right">Welcome, @User.Identity.Name. Your role is</a>
                             </li>
                             <li>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="LogOut">Logout</a>

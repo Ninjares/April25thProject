@@ -23,6 +23,7 @@
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
     <button onclick="random()">Text</button>
+    <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
         	var mymap = L.map('mapid').setView([42.686, 23.319], 13);
 
@@ -35,7 +36,7 @@
             }).addTo(mymap);
 
             var marker1 = L.marker([42.686, 23.319]).addTo(mymap);
-            var marker2 = L.marker([42.684, 23.318]).addTo(mymap);
+            var marker2 = L.marker();
             var circle = L.circle([42.686, 23.320], {
                 color: 'blue',
                 fillColor: '#f03',
@@ -65,7 +66,7 @@
                 }
             }
             looper();
-            
+
         var jsonroute = "@Model.JsonRoutes".replace(/&quot;/g, "\"");
         var routes = JSON.parse(jsonroute);
 
@@ -91,6 +92,13 @@
             iconAnchor: [20,20]
         })
 
+        var BusIcon = L.icon({
+            iconUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3.iconfinder.com%2Fdata%2Ficons%2Ftransportation%2F100%2Ftransportation__bus-512.png&f=1&nofb=1",
+
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+
         var jsonstops = "@Model.JsonStops".replace(/&quot;/g, "\"");
         var stops = JSON.parse(jsonstops);
 
@@ -100,6 +108,7 @@
             }
             stops.forEach(allstops)
 
+        var userlocation = L.marker({ icon: UserIcon });
 
             var popup = L.popup();
             function onMapClick(e)
@@ -122,13 +131,34 @@
             function showPosition(position)
             {
                 alert(position.coords.latitude + " " + position.coords.longitude);
-                L.marker([position.coords.latitude, position.coords.longitude], { icon: UserIcon }).addTo(mymap);
+                userlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
             }
             function random()
             {
                 alert(jsonstops)
                 alert(stops[0].coordinates)
-            }
+        }
+
+
+
+
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
+        var busarray = new Array();
+        connection.on("DisplayDrivers", function (buses) {
+            //alert(buses);
+            //alert(buses[0]);
+            //alert(buses[0].busLine);
+            //alert(buses[0].location);
+            buses.forEach(allbuses);
+        });
+        function allbuses(bus, index, arr) {
+            alert(bus.location);
+            L.marker(bus.location, { icon: BusIcon }).bindPopup(bus.busLine).addTo(mymap);
+        }
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
 
     </script>
     <h1>@Model.JsonStops</h1>

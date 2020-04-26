@@ -25,9 +25,6 @@
     <div id="mapid">
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
-    <button onclick="random()">Text</button>
-    <button onclick="Test()">SignalR Test</button>
-    <button id="sendButton">Send</button>
     <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
        var mymap = L.map('mapid').setView([42.686, 23.319], 13);
@@ -82,6 +79,7 @@
 
         var jsonstops = "@Model.Stops".replace(/&quot;/g, "\"");
         var stops = JSON.parse(jsonstops);
+        
 
         function allstops(stop, index, arr)
         {
@@ -117,13 +115,6 @@
         function SuccessfulPosition(position) {
             driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
         }
-            function random()
-            {
-                alert(navigator.geolocation)
-                alert(navigator.geolocation.getCurrentPosition())
-                alert(stops.StopAddress)
-                alert(stops[0][0].Point)
-            }
 
 
 
@@ -134,18 +125,15 @@
 
 
 
-
+        let h = 0;
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         function Sendlocation(position) {
-            connection.invoke("UpdateLocation", position.coords.latitude, position.coords.longitude);
+            connection.invoke("UpdateLocation", position.coords.latitude + h, position.coords.longitude);
+            h = h + 0.0001;
         }
         connection.on("AllGood", function (user,x,y) {
             alert("All good! "+ user+" "+ x +" "+y);
         })
-        function Test() {
-            alert("test")
-            connection.invoke("UpdateLocation");
-        }
         connection.start().catch(function (err) {
             return console.error(err.toString());
         });

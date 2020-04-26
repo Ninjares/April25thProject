@@ -11,7 +11,7 @@ using SetUpMapsHere.Services;
 
 namespace SetUpMapsHere.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         public IAdminService AdminServices { get; set; }

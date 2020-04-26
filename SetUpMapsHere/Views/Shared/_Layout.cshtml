@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ASPDbContext.Models
 @inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<ApplicationRole> RoleManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +43,7 @@
                         @if (!String.IsNullOrEmpty(User.Identity.Name))
                         {
                             <li>
-                                <a class="nav-link float-lg-right">Welcome, @User.Identity.Name. Your role is</a>
+                                <a class="nav-link float-lg-right">Welcome, @User.Identity.Name. Your role is @(RoleManager.Roles.FirstOrDefault(x => x.RoleUsers.Any(z => z.UserId == UserManager.GetUserId(User))).Name).</a>
                             </li>
                             <li>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="LogOut">Logout</a>

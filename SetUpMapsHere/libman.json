@@ -10,5 +10,10 @@
         "dist/browser/signalr.min.js"
       ]
     }
-  ]
+  ,
+{
+  "library": "@types/devexpress-web@192.3.0",
+  "destination": "wwwroot/lib/@types/devexpress-web/"
+}
+]
 }

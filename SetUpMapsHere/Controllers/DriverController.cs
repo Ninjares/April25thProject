@@ -1,4 +1,5 @@
 ﻿using ASPDbContext.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SetUpMapsHere.Models.Driver;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SetUpMapsHere.Controllers
 {
+    [Authorize(Roles = "Driver")]
     public class DriverController : Controller
     {
         private IDriverService DriverService { get; set; }

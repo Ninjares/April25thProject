@@ -22,15 +22,15 @@
     <div id="mapid">
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
-    <button onclick="random()">Text</button>
+    <button onclick="EngageBroadcast()">BroadCast</button>
     <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
         	var mymap = L.map('mapid').setView([42.686, 23.319], 13);
 
             L.tileLayer
             ('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		        maxZoom: 18,
-		        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		      maxZoom: 18,
+		      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 id: 'mapbox/streets-v11',
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
@@ -60,12 +60,13 @@
             {
                 L.marker().setLatLng([42.674, 23.35 + i]).addTo(mymap);
                 marker2.setLatLng([42.684, 23.318 - i]).addTo(mymap);
+                marker2.remove();
                 i += 0.0005;
                 if (true) {
                     setTimeout(looper, 1000)
                 }
             }
-            looper();
+        looper();
 
         var jsonroute = "@Model.JsonRoutes".replace(/&quot;/g, "\"");
         var routes = JSON.parse(jsonroute);
@@ -142,9 +143,8 @@
 
 
 
-
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
-        var busarray = new Array();
+        var busarray = {};
         connection.on("DisplayDrivers", function (buses) {
             //alert(buses);
             //alert(buses[0]);
@@ -152,13 +152,27 @@
             //alert(buses[0].location);
             buses.forEach(allbuses);
         });
+        connection.on("RemoveDriver", function (driverid) {
+            busarray[driverid].remove();
+            delete busarray[driverid];
+        });
         function allbuses(bus, index, arr) {
             alert(bus.location);
-            L.marker(bus.location, { icon: BusIcon }).bindPopup(bus.busLine).addTo(mymap);
+            if (busarray[bus.id] == null) busarray[bus.id] = L.marker();
+            busarray[bus.id].setLatLng(bus.location).setIcon(BusIcon).bindPopup(bus.busLine).addTo(mymap);
+        }
+
+        connection.on("Confirm", function () {
+            alert("Confirmed");
+        });
+
+        function EngageBroadcast() {
+            connection.invoke("Engage");
         }
         connection.start().catch(function (err) {
             return console.error(err.toString());
         });
+        setTimeout(EngageBroadcast, 500);
 
     </script>
     <h1>@Model.JsonStops</h1>

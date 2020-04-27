@@ -23,11 +23,11 @@ namespace SetUpMapsHere.Controllers
         }
 
         [HttpGet("/User/Login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
+            if (SignInManager.IsSignedIn(this.User)) await SignInManager.SignOutAsync();
             return this.View();
         }
-        [Authorize()]
         [HttpGet("/User/Register")]
         public IActionResult Register()
         {
@@ -37,7 +37,6 @@ namespace SetUpMapsHere.Controllers
         [HttpPost("/User/Login")]
         public async Task<IActionResult> Login(Models.User.Login login)
         {
-            if (SignInManager.IsSignedIn(this.User)) await SignInManager.SignOutAsync();
             var signin = await SignInManager.PasswordSignInAsync(login.Username, login.Password, true, true);
             if (signin.Succeeded)
                 return Redirect("/");

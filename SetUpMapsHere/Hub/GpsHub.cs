@@ -10,60 +10,52 @@
     using Newtonsoft.Json;
     using System.Threading;
     using System;
+    using SetUpMapsHere.Services;
 
     //[Authorize]
     public class GpsHub:Hub
     {
-        private ConcurrentDictionary<string, double[]> DriverLocations;
+        
         public UserManager<ApplicationUser> UserManager { get; set; }
-        private bool IsTransmitting { get; set; }
-        public GpsHub(UserManager<ApplicationUser> userManager)
+        public ILocationService LocationService { get; set; }
+        public GpsHub(UserManager<ApplicationUser> userManager, ILocationService service)
         {
             UserManager = userManager;
-            DriverLocations = new ConcurrentDictionary<string, double[]>();
-            IsTransmitting = false;
+            LocationService = service;
         }
 
-        public void UpdateLocation(double x, double y)
+        public async Task UpdateLocation(double x, double y)
         {
-            DriverLocations.AddOrUpdate(UserManager.GetUserId(this.Context.User), new double[] { x, y }, (k,v) => new double[] { x, y });
-            this.Clients.All.SendAsync("AllGood", "user", x, y);
+            string UserId = UserManager.GetUserId(this.Context.User);
+            LocationService.Update(UserManager.GetUserId(this.Context.User), x, y);
+            await this.Clients.All.SendAsync("AllGood", "user", x, y);
+            //Task.Factory.StartNew(() => GetAllDrivers(), TaskCreationOptions.RunContinuationsAsynchronously);
+           // Console.WriteLine();
         }
 
         public async Task RemoveBus()
         {
-            double[] placeholder;
             string usr = UserManager.GetUserId(this.Context.User);
-            DriverLocations.TryRemove(usr, out placeholder);
+            LocationService.Remove(usr);
             await this.Clients.All.SendAsync("RemoveDriver", usr);
-        }
-
-        public void Engage()
-        {
-            if (!IsTransmitting)
-            {
-                this.Clients.All.SendAsync("Confirm");
-                IsTransmitting = true;
-                GetAllDrivers();
-            }
         }
 
         public async Task GetAllDrivers()
         {
-            while (true)
+            if (!LocationService.IsCalled)
             {
-                await Task.Delay(1000);
-                if (DriverLocations.Count != 0)
+                LocationService.IsCalled = true;
+                while (true)
                 {
-                    IsTransmitting = true;
-                    var buses = DriverLocations.Select(x => new
+                    Task t = Task.Delay(3000);
                     {
-                        Id = x.Key,
-                        BusLine = UserManager.Users.Where(x => x.Id == UserManager.GetUserId(this.Context.User)).Select(x => x.Bus.Line.Name + " - " + x.Bus.BusLoginHash).FirstOrDefault(),
-                        Location = x.Value
-                    }).ToArray();
-                    //string SignalString = JsonConvert.SerializeObject(buses);
-                    await this.Clients.All.SendAsync("DisplayDrivers", buses);
+                        if (LocationService.DriversAvialable)
+                        {
+                            var buses = LocationService.GetAllDrivers();
+                            await this.Clients.All.SendAsync("DisplayDrivers", buses);
+                        }
+                    }
+                    t.Wait();
                 }
             }
         }

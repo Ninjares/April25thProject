@@ -45,6 +45,7 @@ namespace SetUpMapsHere
             services.AddTransient<IOSMService, OSMService>();
             services.AddTransient<IAdminService, AdminServices>();
             services.AddTransient<IDriverService, DriverService>();
+            services.AddSingleton<ILocationService>(new LocationService());
             services.AddRazorPages();
             services.AddSignalR();
 

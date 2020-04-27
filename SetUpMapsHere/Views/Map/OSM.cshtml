@@ -146,6 +146,8 @@
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         var busarray = {};
         connection.on("DisplayDrivers", function (buses) {
+            //alert("Received drivers");
+            //alert(buses);
             //alert(buses);
             //alert(buses[0]);
             //alert(buses[0].busLine);
@@ -167,13 +169,12 @@
         });
 
         function EngageBroadcast() {
-            connection.invoke("Engage");
+            connection.invoke("GetAllDrivers");
         }
         connection.start().catch(function (err) {
             return console.error(err.toString());
         });
-        setTimeout(EngageBroadcast, 500);
+        setTimeout(EngageBroadcast, 1000);
 
     </script>
-    <h1>@Model.JsonStops</h1>
 </body>

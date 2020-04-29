@@ -25,6 +25,7 @@
     <div id="mapid">
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
+    <button onclick="EndDriving()">End driving session</button>
     <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
        var mymap = L.map('mapid').setView([42.686, 23.319], 13);
@@ -56,6 +57,7 @@
         var i = 0.01
         function looper()
         {
+            getLocation();
                 i = i * (-1);
                 movingmarker.setLatLng([42.684, 23.318 + i]).addTo(mymap);
                 if (true) {
@@ -79,7 +81,7 @@
 
         var jsonstops = "@Model.Stops".replace(/&quot;/g, "\"");
         var stops = JSON.parse(jsonstops);
-        
+
 
         function allstops(stop, index, arr)
         {
@@ -113,7 +115,7 @@
                 L.marker([positionn.coords.latitude, positionn.coords.longitude], { icon: UserIcon }).addTo(mymap);
             }
         function SuccessfulPosition(position) {
-            driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
+            driverlocation.setLatLng([position.coords.latitude + h, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
         }
 
 
@@ -129,7 +131,10 @@
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         function Sendlocation(position) {
             connection.invoke("UpdateLocation", position.coords.latitude + h, position.coords.longitude);
-            h = h + 0.0001;
+            h = h + 0.001;
+        }
+        function EndDriving() {
+            connection.invoke("RemoveBus");
         }
         connection.on("AllGood", function (user,x,y) {
             alert("All good! "+ user+" "+ x +" "+y);
@@ -142,6 +147,9 @@
         //    e.preventDefault();
 
         //});
+        window.addEventListener('beforeunload', () => {
+            EndDriving();
+        });
     </script>
     <h1>@Model.Route</h1>
     <h2>@Model.Stops</h2>

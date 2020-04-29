@@ -57,10 +57,11 @@ namespace SetUpMapsHere.Services
         {
             bool deleted = false;
             double[] placeholder;
-            while (!deleted)
+            //while (!deleted)
             {
                 deleted = DriverLocations.TryRemove(UserId, out placeholder);
             }
+            //if (DriverLocations.Count == 0) IsCalled = false;
         }
 
         public void Update(string UserId, double x, double y)

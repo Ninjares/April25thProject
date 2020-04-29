@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SetUpMapsHere.Controllers
 {
-    //[Authorize(Roles = "Driver")]
+    [Authorize(Roles = "Driver")]
     public class DriverController : Controller
     {
         private IDriverService DriverService { get; set; }

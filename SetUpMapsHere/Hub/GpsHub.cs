@@ -23,16 +23,16 @@
             UserManager = userManager;
             LocationService = service;
         }
-
+        [Authorize(Roles = "Driver")]
         public async Task UpdateLocation(double x, double y)
         {
             string UserId = UserManager.GetUserId(this.Context.User);
             LocationService.Update(UserManager.GetUserId(this.Context.User), x, y);
-            await this.Clients.All.SendAsync("AllGood", "user", x, y);
+            //await this.Clients.All.SendAsync("AllGood", "user", x, y);
             //Task.Factory.StartNew(() => GetAllDrivers(), TaskCreationOptions.RunContinuationsAsynchronously);
-           // Console.WriteLine();
+            //Console.WriteLine();
         }
-
+        [Authorize(Roles = "Driver")]
         public async Task RemoveBus()
         {
             string usr = UserManager.GetUserId(this.Context.User);
@@ -44,10 +44,11 @@
         {
             if (!LocationService.IsCalled)
             {
+                
                 LocationService.IsCalled = true;
                 while (true)
                 {
-                    Task t = Task.Delay(3000);
+                    Task t = Task.Delay(2000);
                     {
                         if (LocationService.DriversAvialable)
                         {

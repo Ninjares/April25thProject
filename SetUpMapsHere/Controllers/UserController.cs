@@ -25,7 +25,7 @@ namespace SetUpMapsHere.Controllers
         [HttpGet("/User/Login")]
         public async Task<IActionResult> Login()
         {
-            if (SignInManager.IsSignedIn(this.User)) await SignInManager.SignOutAsync();
+            //if (SignInManager.IsSignedIn(this.User)) await SignInManager.SignOutAsync();
             return this.View();
         }
         [HttpGet("/User/Register")]

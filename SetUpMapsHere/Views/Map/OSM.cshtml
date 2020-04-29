@@ -58,9 +58,8 @@
             var i = 0;
             function looper()
             {
-                L.marker().setLatLng([42.674, 23.35 + i]).addTo(mymap);
+                //L.marker().setLatLng([42.674, 23.35 + i]).addTo(mymap);
                 marker2.setLatLng([42.684, 23.318 - i]).addTo(mymap);
-                marker2.remove();
                 i += 0.0005;
                 if (true) {
                     setTimeout(looper, 1000)
@@ -147,11 +146,6 @@
         var busarray = {};
         connection.on("DisplayDrivers", function (buses) {
             //alert("Received drivers");
-            //alert(buses);
-            //alert(buses);
-            //alert(buses[0]);
-            //alert(buses[0].busLine);
-            //alert(buses[0].location);
             buses.forEach(allbuses);
         });
         connection.on("RemoveDriver", function (driverid) {
@@ -159,7 +153,7 @@
             delete busarray[driverid];
         });
         function allbuses(bus, index, arr) {
-            alert(bus.location);
+            //alert(bus.location);
             if (busarray[bus.id] == null) busarray[bus.id] = L.marker();
             busarray[bus.id].setLatLng(bus.location).setIcon(BusIcon).bindPopup(bus.busLine).addTo(mymap);
         }

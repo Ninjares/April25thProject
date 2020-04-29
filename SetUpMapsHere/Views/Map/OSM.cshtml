@@ -21,8 +21,7 @@
     </form>
     <div id="mapid">
     </div>
-    <button onclick="getLocation()">Get Geolocation</button>
-    <button onclick="EngageBroadcast()">BroadCast</button>
+    <button onclick="getLocation()">Where Am I?</button>
     <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
         	var mymap = L.map('mapid').setView([42.686, 23.319], 13);
@@ -34,38 +33,6 @@
                 id: 'mapbox/streets-v11',
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
-
-            var marker1 = L.marker([42.686, 23.319]).addTo(mymap);
-            var marker2 = L.marker();
-            var circle = L.circle([42.686, 23.320], {
-                color: 'blue',
-                fillColor: '#f03',
-                fillOpacity: 0.2,
-                radius: 100
-            }).addTo(mymap);
-            var polygon = L.polygon([
-                [42.676, 23.320],
-                [42.686, 23.320],
-                [42.685, 23.318]]
-            ).addTo(mymap);
-
-            marker1.bindPopup("<b>Please</b><br>Only presentable stuff!").openPopup();
-            var popup1 = L.popup()
-                .setLatLng([42.664567, 23.305932])
-                .setContent("Appropriate text")
-                .openOn(mymap);
-
-            var i = 0;
-            function looper()
-            {
-                //L.marker().setLatLng([42.674, 23.35 + i]).addTo(mymap);
-                marker2.setLatLng([42.684, 23.318 - i]).addTo(mymap);
-                i += 0.0005;
-                if (true) {
-                    setTimeout(looper, 1000)
-                }
-            }
-        looper();
 
         var jsonroute = "@Model.JsonRoutes".replace(/&quot;/g, "\"");
         var routes = JSON.parse(jsonroute);
@@ -130,17 +97,8 @@
             }
             function showPosition(position)
             {
-                alert(position.coords.latitude + " " + position.coords.longitude);
                 userlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
             }
-            function random()
-            {
-                alert(jsonstops)
-                alert(stops[0].coordinates)
-        }
-
-
-
 
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         var busarray = {};

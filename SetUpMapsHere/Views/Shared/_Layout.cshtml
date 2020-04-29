@@ -20,7 +20,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <div class="navbar-collapse navbar-toggleable-md">
                     <ul class="navbar-nav flex-grow-1">
                         @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -38,35 +38,37 @@
                         @if (this.User.Identity.IsAuthenticated)
                             if (RoleManager.Roles.FirstOrDefault(x => x.RoleUsers.Any(z => z.UserId == UserManager.GetUserId(User))).Name == "Administrator")
                             {
-                                <li class="nav-item rounded-right">
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllUsers">Roles</a>
                                 </li>
-                                <li class="nav-item rounded-right">
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllDrivers">Drivers</a>
                                 </li>
-                                <li class="nav-item rounded-right">
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllBuses">Buses</a>
                                 </li>
                             }
-                        @if (String.IsNullOrEmpty(User.Identity.Name))
+                    </ul>
+                    <ul class="navbar-nav navbar justify-content-end">
+                        @if (!this.User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item rounded-right">
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
                             </li>
-                            <li class="nav-item rounded-right">
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
                             </li>
                         }
-                        @if (!String.IsNullOrEmpty(User.Identity.Name))
+                        @if (this.User.Identity.IsAuthenticated)
                         {
-                            <li>
+                            <li class="nav-item float-lg-right">
                                 <a class="nav-link float-lg-right">Welcome, @User.Identity.Name. Your role is @(RoleManager.Roles.FirstOrDefault(x => x.RoleUsers.Any(z => z.UserId == UserManager.GetUserId(User))).Name).</a>
                             </li>
-                            <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="LogOut">Logout</a>
+                            <li class="nav-item">
+                                <a class="nav-link" style="color:darkred" asp-area="" asp-controller="User" asp-action="LogOut">Logout</a>
                             </li>
                         }
-                                </ul>
+                    </ul>
                 </div>
             </div>
         </nav>

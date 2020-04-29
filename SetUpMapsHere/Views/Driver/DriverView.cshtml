@@ -53,13 +53,9 @@
             iconAnchor: [20, 20]
         })
 
-        var movingmarker = L.marker([42.686, 23.319]).addTo(mymap);
-        var i = 0.01
         function looper()
         {
             getLocation();
-                i = i * (-1);
-                movingmarker.setLatLng([42.684, 23.318 + i]).addTo(mymap);
                 if (true) {
                     setTimeout(looper, 1000)
                 }
@@ -85,7 +81,7 @@
 
         function allstops(stop, index, arr)
         {
-                L.marker(stop.Point, { icon: StopIcon }).bindPopup(stop.Address).addTo(mymap);
+             L.marker(stop.Point, { icon: StopIcon }).bindPopup(stop.Address).addTo(mymap);
         }
         stops[0].forEach(allstops);
 

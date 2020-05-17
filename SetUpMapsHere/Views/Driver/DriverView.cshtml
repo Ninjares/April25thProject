@@ -1,5 +1,4 @@
-﻿@model SetUpMapsHere.Models.Driver.DrivingMode
-@{
+﻿@{
     ViewData["Title"] = "DriverView";
 }
 
@@ -62,10 +61,22 @@
         }
         looper();
 
-        var jsonroute = "@Model.Route".replace(/&quot;/g, "\"");
+        let jsonroute = ""//"Model.Route".replace(/&quot;/g, "\"");
+        function AjaxRoute() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                //when a state is changed execute this
+                if (this.readyState == 4 && this.status == 200) {
+                    //when the query has arrived and the status is ok execute this
+                    jsonroute = this.responseText;
+                }
+            }
+            xhr.open("POST", "/Driver/Route", false);
+            xhr.send();
+        }
+        AjaxRoute();
         var routes = JSON.parse(jsonroute);
-
-        var route = L.polyline(routes[0], { color: 'red' }).addTo(mymap)
+        var route = L.polyline(routes.coordinates, { color: routes.colorHex }).addTo(mymap)
 
             //function allroutes(json, index, arr)
             //{
@@ -75,13 +86,26 @@
 
 
 
-        var jsonstops = "@Model.Stops".replace(/&quot;/g, "\"");
+        let jsonstops = ""//"Model.Stops".replace(/&quot;/g, "\"");
+        function AjaxStops() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                //when a state is changed execute this
+                if (this.readyState == 4 && this.status == 200) {
+                    //when the query has arrived and the status is ok execute this
+                    jsonstops = this.responseText;
+                }
+            }
+            xhr.open("POST", "/Driver/Stops", false);
+            xhr.send();
+        }
+        AjaxStops();
         var stops = JSON.parse(jsonstops);
 
 
         function allstops(stop, index, arr)
         {
-             L.marker(stop.Point, { icon: StopIcon }).bindPopup(stop.Address).addTo(mymap);
+             L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap);
         }
         stops[0].forEach(allstops);
 
@@ -147,6 +171,4 @@
             EndDriving();
         });
     </script>
-    <h1>@Model.Route</h1>
-    <h2>@Model.Stops</h2>
 </body>

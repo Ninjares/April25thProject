@@ -7,7 +7,7 @@ namespace SetUpMapsHere.Services
 {
     public interface IOSMService
     {
-        string GetAllRoutes(params string[] lines);
-        string GetAllStops(params string[] lines);
+        object GetAllRoutes(params string[] lines);
+        object GetAllStops(params string[] lines);
     }
 }

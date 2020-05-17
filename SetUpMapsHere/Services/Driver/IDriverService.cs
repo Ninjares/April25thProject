@@ -7,7 +7,7 @@ namespace SetUpMapsHere.Services
 {
     public interface IDriverService
     {
-        public string GetStops(string userId);
-        public string GetRoute(string userId);
+        public object GetStops(string userId);
+        public object GetRoute(string userId);
     }
 }

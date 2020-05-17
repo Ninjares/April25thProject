@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SetUpMapsHere.Models.Driver;
 using SetUpMapsHere.Services;
 using System;
 using System.Collections.Generic;
@@ -24,13 +23,17 @@ namespace SetUpMapsHere.Controllers
         [HttpGet("Driver/DriverView")]
         public IActionResult Drive()
         {
-            string userId = UserManager.GetUserId(this.User);
-            var model = new DrivingMode()
-            {
-                 Route = DriverService.GetRoute(userId),
-                 Stops = DriverService.GetStops(userId)
-            };
-            return View("DriverView", model);
+            return View("DriverView");
+        }
+        [HttpPost("Driver/Stops")]
+        public async Task<JsonResult> GetStops()
+        {
+            return this.Json(DriverService.GetStops(UserManager.GetUserId(this.User)));
+        }
+        [HttpPost("Driver/Route")]
+        public async Task<JsonResult> GetRoute()
+        {
+            return this.Json(DriverService.GetRoute(UserManager.GetUserId(this.User)));
         }
     }
 }

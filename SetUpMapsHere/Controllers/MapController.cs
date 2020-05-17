@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using SetUpMapsHere.Models.Maps;
 using SetUpMapsHere.Services;
 
 namespace SetUpMapsHere.Controllers
@@ -20,14 +19,24 @@ namespace SetUpMapsHere.Controllers
         [HttpGet("/Map/OSM")]
         public IActionResult OSM()
         {
-            var param = new string[] {  };
-            string routes = OSMService.GetAllRoutes(param);
-            var model = new OSMViewModel
-            {
-                JsonRoutes = routes,
-                JsonStops = OSMService.GetAllStops(param)
-            };
-            return View(model);        
+            //var param = new string[] { };
+            //object routes = OSMService.GetAllRoutes(param);
+            //var model = new OSMViewModel
+            //{
+            //    JsonRoutes = JsonConvert.SerializeObject(routes),
+            //    JsonStops = OSMService.GetAllStops(param)
+            //};
+            return View();
+        }
+        [HttpPost("/Map/GetRoutes")]
+        public async Task<JsonResult> GetRoutes()
+        {
+            return this.Json(OSMService.GetAllRoutes());
+        }
+        [HttpPost("/Map/GetStops")]
+        public async Task<JsonResult> GetStops()
+        {
+            return this.Json(OSMService.GetAllStops());
         }
     }
 }

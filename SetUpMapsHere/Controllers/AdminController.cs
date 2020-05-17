@@ -143,7 +143,7 @@ namespace SetUpMapsHere.Controllers
                 Username = user.UserName,
                 Email = user.Email,
                 CurrentRole = RoleManager.Roles.FirstOrDefault(x => x.RoleUsers.Any(x => x.UserId == UserId)).Name,
-                AllRoles = RoleManager.Roles.Select(x =>x.Name)
+                AllRoles = RoleManager.Roles.Select(x => x.Name)
             };
             return View("Roles/RoleChange",model);
         }

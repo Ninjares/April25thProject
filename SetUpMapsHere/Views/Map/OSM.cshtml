@@ -34,14 +34,26 @@
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
 
-        var jsonroute = "@Model.JsonRoutes".replace(/&quot;/g, "\"");
-        var routes = JSON.parse(jsonroute);
-
-            function allroutes(json, index, arr)
-            {
-                L.polyline(json.coordinates, { color: json.ColorHex }).addTo(mymap);
+        let jsonroute = "";//"Model.JsonRoutes".replace(/&quot;/g, "\"");
+        function AjaxRoutes() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                //when a state is changed execute this
+                if (this.readyState == 4 && this.status == 200) {
+                    //when the query has arrived and the status is ok execute this
+                    jsonroute = this.responseText;
+                }
             }
-            routes.forEach(allroutes);
+            xhr.open("POST", "/Map/GetRoutes", false);
+            xhr.send();
+        }
+        AjaxRoutes();
+        var routes = JSON.parse(jsonroute);
+        function allroutes(json, index, arr)
+        {
+            L.polyline(json.coordinates, { color: json.colorHex }).addTo(mymap);
+        }
+        routes.forEach(allroutes);
 
 
         var StopIcon = L.icon({
@@ -66,12 +78,26 @@
             iconAnchor: [15, 15]
         });
 
-        var jsonstops = "@Model.JsonStops".replace(/&quot;/g, "\"");
+        let jsonstops = "";//"Model.JsonStops".replace(/&quot;/g, "\"");
+
+        function AjaxStops() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                //when a state is changed execute this
+                if (this.readyState == 4 && this.status == 200) {
+                    //when the query has arrived and the status is ok execute this
+                    jsonstops = this.responseText;
+                }
+            }
+            xhr.open("POST", "/Map/GetStops", false);
+            xhr.send();
+        }
+        AjaxStops();
         var stops = JSON.parse(jsonstops);
 
             function allstops(stops, index, arr)
             {
-                L.marker(stops.coordinates, { icon: StopIcon }).bindPopup(stops.StopList).addTo(mymap);
+                L.marker(stops.coordinates, { icon: StopIcon }).bindPopup(stops.stopList).addTo(mymap);
             }
             stops.forEach(allstops)
 

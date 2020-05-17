@@ -24,19 +24,19 @@ namespace SetUpMapsHere.Services
             DriverLocations = new ConcurrentDictionary<string, double[]>();
             DriverBusname = new ConcurrentDictionary<string, string>();
             IsCalled = false;
-            //How do I inject a database in a singleton?
-            using(var db = new TransportDbContext())
-            {
-                var data = db.Users.Where(x => x.BusId.HasValue).Select(x => new
-                {
-                    x.Id,
-                    BusName = x.Bus.Line.Name + " - " + x.Bus.BusLoginHash
-                });
-                foreach(var pair in data)
-                {
-                    DriverBusname.AddOrUpdate(pair.Id, pair.BusName, (k, v) => pair.BusName);
-                }
-            }
+            ////How do I inject a database in a singleton?
+            //using (var db = new TransportDbContext(new Microsoft.EntityFrameworkCore.DbContextOptions<TransportDbContext> { }))
+            //{
+            //    var data = db.Users.Where(x => x.BusId.HasValue).Select(x => new
+            //    {
+            //        x.Id,
+            //        BusName = x.Bus.Line.Name + " - " + x.Bus.BusLoginHash
+            //    });
+            //    foreach (var pair in data)
+            //    {
+            //        DriverBusname.AddOrUpdate(pair.Id, pair.BusName, (k, v) => pair.BusName);
+            //    }
+            //}
 
         }
 
@@ -46,7 +46,7 @@ namespace SetUpMapsHere.Services
                 var buses = DriverLocations.Select(x => new
                 {
                     Id = x.Key,
-                    BusLine = DriverBusname[x.Key],
+                    //BusLine = DriverBusname[x.Key],
                     Location = x.Value
                 }).ToArray();
                 return buses;

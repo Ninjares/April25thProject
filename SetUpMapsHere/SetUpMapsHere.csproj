@@ -32,7 +32,10 @@
     <Folder Include="Models\Driver\" />
     <Folder Include="Models\Maps\" />
     <Folder Include="Views\Driver\" />
-    <Folder Include="Views\Map\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\MapViewJS.js" />
   </ItemGroup>
 
 

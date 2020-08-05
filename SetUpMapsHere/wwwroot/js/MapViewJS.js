@@ -8,6 +8,8 @@ L.tileLayer
         accessToken: 'your.mapbox.access.token'
     }).addTo(mymap);
 
+L.marker([42.686, 23.319]).bindPopup(`<input id="create-btn" type="button" class="btn btn-primary" value="Create"/>`).addTo(mymap);
+
 let jsonroute = "";//"Model.JsonRoutes".replace(/&quot;/g, "\"");
 function AjaxRoutes() {
     var xhr = new XMLHttpRequest();

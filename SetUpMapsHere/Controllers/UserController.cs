@@ -72,10 +72,11 @@ namespace SetUpMapsHere.Controllers
                     EmailConfirmed = true,
                     PhoneNumber = "1234567890"
                 }, register.Password);
-
-                await UserManager.AddToRoleAsync(UserManager.Users.FirstOrDefault(x => x.UserName == register.Username), roleName);
                 if (result.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(UserManager.Users.FirstOrDefault(x => x.UserName == register.Username), roleName);
                     return Redirect("/");
+                }
                 else return Redirect("/User/Register");
             }
             else return Redirect("/User/Register");

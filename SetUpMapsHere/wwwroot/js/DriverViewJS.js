@@ -1,4 +1,5 @@
-﻿var mymap = L.map('mapid').setView([42.686, 23.319], 13);
+﻿var mymap = L.map('mapid');
+navigator.geolocation.getCurrentPosition((position) => mymap.setView([position.coords.latitude, position.coords.longitude], 14));
 
 L.tileLayer
     ('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -31,52 +32,11 @@ function looper() {
 }
 looper();
 
-let jsonroute = ""//"Model.Route".replace(/&quot;/g, "\"");
-function AjaxRoute() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        //when a state is changed execute this
-        if (this.readyState == 4 && this.status == 200) {
-            //when the query has arrived and the status is ok execute this
-            jsonroute = this.responseText;
-        }
-    }
-    xhr.open("POST", "/Driver/Route", false);
-    xhr.send();
-}
-AjaxRoute();
-var routes = JSON.parse(jsonroute);
-var route = L.polyline(routes.coordinates, { color: routes.colorHex }).addTo(mymap)
 
-//function allroutes(json, index, arr)
-//{
-//    L.polyline(json.coordinates, { color: json.ColorHex }).addTo(mymap);
-//}
+fetch('/Driver/Route').then(x => x.json()).then(route => { console.log(route); L.polyline(route.coordinates, { color: route.colorHex }).addTo(mymap); });
+fetch('/Driver/Stops').then(x => x.json()).then(stops => { stops.forEach((stop) => { L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap); })});
 
 
-
-
-let jsonstops = ""//"Model.Stops".replace(/&quot;/g, "\"");
-function AjaxStops() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        //when a state is changed execute this
-        if (this.readyState == 4 && this.status == 200) {
-            //when the query has arrived and the status is ok execute this
-            jsonstops = this.responseText;
-        }
-    }
-    xhr.open("POST", "/Driver/Stops", false);
-    xhr.send();
-}
-AjaxStops();
-var stops = JSON.parse(jsonstops);
-
-
-function allstops(stop, index, arr) {
-    L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap);
-}
-stops[0].forEach(allstops);
 
 var driverlocation = L.marker();
 var popup = L.popup();

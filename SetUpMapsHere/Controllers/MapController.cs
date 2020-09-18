@@ -28,12 +28,12 @@ namespace SetUpMapsHere.Controllers
             //};
             return View();
         }
-        [HttpPost("/Map/GetRoutes")]
+        [HttpGet("/Map/GetRoutes")]
         public async Task<JsonResult> GetRoutes()
         {
             return this.Json(OSMService.GetAllRoutes());
         }
-        [HttpPost("/Map/GetStops")]
+        [HttpGet("/Map/GetStops")]
         public async Task<JsonResult> GetStops()
         {
             return this.Json(OSMService.GetAllStops());

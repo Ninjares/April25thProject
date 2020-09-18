@@ -46,6 +46,7 @@ namespace SetUpMapsHere.Services
             {
                 var stops = db.Stops.Where(x => x.LineStops.Any(y => lines.Contains(y.Line.Name))).Select(x => new //remodel database so that linepoints are not busStopPoints
                 {
+                    x.Address,
                     stopList = string.Join(", ", x.LineStops.Where(y => lines.Contains(y.Line.Name)).Select(y => y.Line.Name)),
                     coordinates = new double[] { x.Point.X, x.Point.Y }
                 });
@@ -55,9 +56,10 @@ namespace SetUpMapsHere.Services
             {
                 var stops = db.Stops.Select(x => new //remodel database so that linepoints are not busStopPoints
                 {
+                    x.Address,
                     stopList = string.Join(", ", x.LineStops.Select(y => y.Line.Name)),
                     coordinates = new double[] { x.Point.X, x.Point.Y }
-                });
+                }) ;
                 return stops;
 
             }

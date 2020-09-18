@@ -11,7 +11,12 @@ namespace ASPDbContext
         public TransportDbContext() : base() { }
         public TransportDbContext(DbContextOptions<TransportDbContext> options) : base(options)
         {
+            
+        }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=.;Database=BusGps;Integrated Security=True;");
         }
         public DbSet<Bus> Buses { get; set; }
         public DbSet<BusLine> BusLines { get; set; }
@@ -19,10 +24,6 @@ namespace ASPDbContext
         public DbSet<LinePoint> LinePoints { get; set; }
         public DbSet<LineStop> LineStops { get; set; }
         public DbSet<Point> Points { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TransportASP;Integrated Security=True;");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

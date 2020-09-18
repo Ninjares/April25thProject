@@ -27,7 +27,7 @@
         public async Task UpdateLocation(double x, double y)
         {
             string UserId = UserManager.GetUserId(this.Context.User);
-            LocationService.Update(UserManager.GetUserId(this.Context.User), x, y);
+            LocationService.Update(UserId, x, y);
             //await this.Clients.All.SendAsync("AllGood", "user", x, y);
             //Task.Factory.StartNew(() => GetAllDrivers(), TaskCreationOptions.RunContinuationsAsynchronously);
             //Console.WriteLine();

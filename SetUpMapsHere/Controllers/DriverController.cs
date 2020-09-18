@@ -25,12 +25,12 @@ namespace SetUpMapsHere.Controllers
         {
             return View("DriverView");
         }
-        [HttpPost("Driver/Stops")]
+        [HttpGet("Driver/Stops")]
         public async Task<JsonResult> GetStops()
         {
             return this.Json(DriverService.GetStops(UserManager.GetUserId(this.User)));
         }
-        [HttpPost("Driver/Route")]
+        [HttpGet("Driver/Route")]
         public async Task<JsonResult> GetRoute()
         {
             return this.Json(DriverService.GetRoute(UserManager.GetUserId(this.User)));

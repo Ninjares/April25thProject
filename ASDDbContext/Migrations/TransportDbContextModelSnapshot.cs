@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ASDDbContext.Migrations
+namespace ASPDbContext.Migrations
 {
     [DbContext(typeof(TransportDbContext))]
     partial class TransportDbContextModelSnapshot : ModelSnapshot

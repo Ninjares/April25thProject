@@ -1,4 +1,5 @@
-﻿var mymap = L.map('mapid').setView([42.686, 23.319], 13);
+﻿var mymap = L.map('mapid');
+navigator.geolocation.getCurrentPosition((position) => mymap.setView([position.coords.latitude, position.coords.longitude], 14));
 
 L.tileLayer
     ('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -10,29 +11,15 @@ L.tileLayer
 
 L.marker([42.686, 23.319]).bindPopup(`<input id="create-btn" type="button" class="btn btn-primary" value="Create"/>`).addTo(mymap);
 
-let jsonroute = "";//"Model.JsonRoutes".replace(/&quot;/g, "\"");
-function AjaxRoutes() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        //when a state is changed execute this
-        if (this.readyState == 4 && this.status == 200) {
-            //when the query has arrived and the status is ok execute this
-            jsonroute = this.responseText;
-        }
-    }
-    xhr.open("POST", "/Map/GetRoutes", false);
-    xhr.send();
-}
-AjaxRoutes();
-var routes = JSON.parse(jsonroute);
-function allroutes(json, index, arr) {
-    L.polyline(json.coordinates, { color: json.colorHex }).addTo(mymap);
-}
-routes.forEach(allroutes);
+
+fetch('/Map/GetRoutes').then(x => x.json()).then(routes => routes.forEach((route) => { console.log(route); L.polyline(route.coordinates, { color: route.colorHex }).addTo(mymap); }));
+fetch('/Map/GetStops').then(x => x.json()).then(stops => stops.forEach((stop) => { console.log(stop); L.marker(stop.coordinates, { icon: StopIcon }).bindPopup(stop.stopList).addTo(mymap);}));
 
 
 var StopIcon = L.icon({
     iconUrl: "https://cdn3.iconfinder.com/data/icons/transport-29/100/22-512.png",
+
+    //iconUrl: "/js/busStop.png",       //this works
 
     iconSize: [40, 40], // size of the icon
     iconAnchor: [20, 40], // point of the icon which will correspond to marker's location
@@ -53,28 +40,6 @@ var BusIcon = L.icon({
     iconAnchor: [15, 15]
 });
 
-let jsonstops = "";//"Model.JsonStops".replace(/&quot;/g, "\"");
-
-function AjaxStops() {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        //when a state is changed execute this
-        if (this.readyState == 4 && this.status == 200) {
-            //when the query has arrived and the status is ok execute this
-            jsonstops = this.responseText;
-        }
-    }
-    xhr.open("POST", "/Map/GetStops", false);
-    xhr.send();
-}
-AjaxStops();
-var stops = JSON.parse(jsonstops);
-
-function allstops(stops, index, arr) {
-    L.marker(stops.coordinates, { icon: StopIcon }).bindPopup(stops.stopList).addTo(mymap);
-}
-stops.forEach(allstops)
-
 var userlocation = L.marker({ icon: UserIcon });
 
 var popup = L.popup();
@@ -89,11 +54,8 @@ function onMapClick(e) {
 mymap.on('click', onMapClick);
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition((position) => { userlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);});
     }
-}
-function showPosition(position) {
-    userlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
 }
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();

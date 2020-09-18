@@ -1,8 +1,10 @@
 ﻿using ASPDbContext;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace SetUpMapsHere.Services
@@ -27,11 +29,14 @@ namespace SetUpMapsHere.Services
 
         public object GetStops(string UserId)
         {
-            var stops = db.Users.Where(x => x.Id == UserId).Select(x => x.Bus.Line.Stops.Select(x => new
-            {
-                x.BusStop.Address,
-                Point = new double[] { x.BusStop.Point.X, x.BusStop.Point.Y }
-            }));
+            //var test = db.Users.Include(x => x.Bus.Line.Stops).Single(x => x.Id == UserId);
+            var stops = db.Users.Where(x => x.Id == UserId)
+                .Select(x => x.Bus.Line.Stops.Select(x => new
+                {
+                    x.BusStop.Address,
+                    Point = new double[] { x.BusStop.Point.X, x.BusStop.Point.Y }
+                })).FirstOrDefault();
+            ;
             return stops;
         }
     }

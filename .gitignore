@@ -1,0 +1,8 @@
+node_modules
+bin
+obj
+.vs
+
+# merging without conflicting files
+# merging files with conflicting lines
+# creating new branches

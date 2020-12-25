@@ -5,7 +5,7 @@ namespace BusGps.Data.Models
     using System.Collections.Generic;
 
     using BusGps.Data.Common.Models;
-
+    using BusGps.Data.Models.AppModels;
     using Microsoft.AspNetCore.Identity;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
@@ -33,5 +33,7 @@ namespace BusGps.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+        public string BusId { get; set; }
+        public Bus Bus { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace BusGps.Web.ViewModels.Admin
     public class DriverInput
     {
         public string DriverId { get; set; }
-        public int IdBus { get; set; }
+        public string IdBus { get; set; }
 
     }
 }

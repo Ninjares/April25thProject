@@ -1,5 +1,7 @@
 ﻿using BusGps.Data.Common.Repositories;
+using BusGps.Data.Models;
 using BusGps.Data.Models.AppModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,18 +14,24 @@ namespace BusGps.Services.Data
     {
         private readonly IDeletableEntityRepository<Bus> Buses;
         private readonly IDeletableEntityRepository<BusLine> Lines;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public AdminService(
             IDeletableEntityRepository<Bus> buses,
-            IDeletableEntityRepository<BusLine> lines)
+            IDeletableEntityRepository<BusLine> lines,
+            UserManager<ApplicationUser> userManager)
         {
             this.Buses = buses;
             this.Lines = lines;
+            this.userManager = userManager;
         }
 
-        public bool AssignBusToDriver(string userId, int busId)
+        public async Task<bool> AssignBusToDriver(string userId, string busId)
         {
-            throw new NotImplementedException();
+            var user = await userManager.FindByIdAsync(userId);
+            user.BusId = busId;
+            await userManager.UpdateAsync(user);
+            return userManager.FindByIdAsync(userId).Result.BusId == busId;
         }
 
         public async Task<bool> CreateBus(string name, string LineId)
@@ -39,19 +47,27 @@ namespace BusGps.Services.Data
             return this.Buses.All().Contains(bus);
         }
 
-        public void DeleteBus(int id)
+        public async Task DeleteBus(string id)
         {
-            throw new NotImplementedException();
+            this.Buses.Delete(this.Getbus(id));
+            await this.Buses.SaveChangesAsync();
         }
 
-        public bool DismissDriver(string driverId)
+        public async Task<bool> DismissDriver(string driverId)
         {
-            throw new NotImplementedException();
+            var user = await userManager.FindByIdAsync(driverId);
+            user.BusId = null;
+            await userManager.UpdateAsync(user);
+            return userManager.FindByIdAsync(driverId).Result.BusId == null;
         }
 
-        public void EditBus(int id, string name, int lineId)
+        public async Task EditBus(string id, string name, string lineId)
         {
-            throw new NotImplementedException();
+            var bus = this.Getbus(id);
+            bus.BusLoginHash = name;
+            bus.LineId = lineId;
+            this.Buses.Update(bus);
+            await this.Buses.SaveChangesAsync();
         }
 
         public IEnumerable<Bus> GetAllBuses()
@@ -59,14 +75,14 @@ namespace BusGps.Services.Data
             return this.Buses.All().Include(x => x.Line);
         }
 
-        public IEnumerable<object> GetAllBusOptions()
+        public IEnumerable<Bus> GetAllBusOptions()
         {
-            throw new NotImplementedException();
+            return this.Buses.All().Include(x => x.Driver).Include(x => x.Line).Where(x => x.Driver == null);
         }
 
         public Bus Getbus(string id)
         {
-            return this.Buses.All().FirstOrDefault(x => x.Id == id);
+            return this.Buses.All().Include(x => x.Line).FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<BusLine> GetLineOptions()

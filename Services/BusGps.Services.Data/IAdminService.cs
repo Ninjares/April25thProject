@@ -9,13 +9,13 @@ namespace BusGps.Services.Data
     public interface IAdminService
     {
         public IEnumerable<Bus> GetAllBuses();
-        public IEnumerable<object> GetAllBusOptions();
-        public bool AssignBusToDriver(string userId, int busId);
+        public IEnumerable<Bus> GetAllBusOptions();
+        public Task<bool> AssignBusToDriver(string userId, string busId);
         public Bus Getbus(string id);
-        public bool DismissDriver(string driverId);
+        public Task<bool> DismissDriver(string driverId);
         public IEnumerable<BusLine> GetLineOptions();
         public Task<bool> CreateBus(string name, string LineId);
-        public void EditBus(int id, string name, int lineId);
-        public void DeleteBus(int id);
+        public Task EditBus(string id, string name, string lineId);
+        public Task DeleteBus(string id);
     }
 }

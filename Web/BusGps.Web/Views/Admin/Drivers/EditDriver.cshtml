@@ -20,11 +20,11 @@
                 </div>
                 <div class="form-group">
                     <label for="BusId">Bus Id</label>
-                    <input type="text" readonly class="form-control" id="BusId" name="BusId" value="@(Model.BusId.HasValue ? Model.BusId.Value.ToString() : "N/a")">
+                    <input type="text" readonly class="form-control" id="BusId" name="BusId" value="@(!string.IsNullOrEmpty(Model.BusId) ? Model.BusId : "N/a")">
                 </div>
                 <div class="form-group">
                     <label for="BusDetails">Bus Details</label>
-                    <input type="text" readonly class="form-control" id="BusDetails" name="BusDetails" value="@(Model.BusId.HasValue ? $"{Model.CurrentLine} - {Model.CurrentBus}" : "N/a")">
+                    <input type="text" readonly class="form-control" id="BusDetails" name="BusDetails" value="@(!string.IsNullOrEmpty(Model.BusId)? $"{Model.CurrentLine} - {Model.CurrentBus}" : "N/a")">
                 </div>
                 <div class="form-group">
                     <label for="IdBus">Item Id</label>

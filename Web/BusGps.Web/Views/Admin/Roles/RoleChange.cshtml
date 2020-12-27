@@ -1,0 +1,43 @@
+﻿@model BusGps.Web.ViewModels.Admin.UserDetails
+@{
+    ViewData["Title"] = "RoleChange";
+}
+
+<h1>RoleChange</h1>
+
+<section class="py-5">
+    <div class="container">
+        <h1 style="margin: 2%; text-align: center;">Trip</h1>
+        <form method="post" href="/Admin/Users/RoleChange">
+            <div>
+                <div class="form-group">
+                    <label for="Username">Username</label>
+                    <input type="text" readonly class="form-control" id="Username" name="Username" value="@Model.Username">
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="text" readonly class="form-control" id="" name="Email" value="@Model.Email">
+                </div>
+                <div class="form-group">
+                    <label for="CurrentRole">Current Role</label>
+                    <input type="text" readonly class="form-control" id="OldRole" name="OldRole" value="@Model.CurrentRole">
+                </div>
+                <div class="form-group">
+                    <label for="role">Item Id</label>
+                    <select id="NewRole" class="form-control" name="NewRole">
+                        @foreach (var role in Model.AllRoles)
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                </div>
+                <input type="hidden" id="IdUser" name="IdUser" value="@Model.Id">
+                <div class="form-group text-center">
+                    <div class="button-holder">
+                        <input type="submit" class="btn btn-primary btn-block text-uppercase" value="Save" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

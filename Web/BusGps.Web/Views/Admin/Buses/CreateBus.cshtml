@@ -1,0 +1,34 @@
+﻿@model IList<BusGps.Web.ViewModels.Admin.LineOption>
+@{
+    ViewData["Title"] = "CreateBus";
+}
+
+<h1>CreateBus</h1>
+
+<section class="py-5">
+    <div class="container">
+        <h1 style="margin: 2%; text-align: center;">New Bus</h1>
+        <div>
+            <form method="post" href="/Admin/Buses/CreateBus">
+                <div class="form-group">
+                    <label for="BusName">Bus Name</label>
+                    <input type="text" class="form-control" id="BusName" name="BusName" placeholder="Bus Name">
+                </div>
+                <div class="form-group">
+                    <label for="LineId">Assign Line</label>
+                    <select id="LineId" class="form-control" name="LineId">
+                        @foreach (var line in Model)
+                        {
+                            <option value="@line.LineId">@line.LineName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group text-center">
+                    <div class="button-holder">
+                        <input type="submit" class="btn btn-primary btn-block text-uppercase" value="Create" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

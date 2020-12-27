@@ -7,7 +7,7 @@ namespace BusGps.Web.ViewModels.Admin
 {
     public class EditBus
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<LineOption> LineOptions { get; set; }
     }

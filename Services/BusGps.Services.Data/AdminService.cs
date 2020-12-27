@@ -1,20 +1,42 @@
-﻿using BusGps.Data.Models.AppModels;
+﻿using BusGps.Data.Common.Repositories;
+using BusGps.Data.Models.AppModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusGps.Services.Data
 {
     public class AdminService : IAdminService
     {
+        private readonly IDeletableEntityRepository<Bus> Buses;
+        private readonly IDeletableEntityRepository<BusLine> Lines;
+
+        public AdminService(
+            IDeletableEntityRepository<Bus> buses,
+            IDeletableEntityRepository<BusLine> lines)
+        {
+            this.Buses = buses;
+            this.Lines = lines;
+        }
+
         public bool AssignBusToDriver(string userId, int busId)
         {
             throw new NotImplementedException();
         }
 
-        public bool CreateBus(string name, int LineId)
+        public async Task<bool> CreateBus(string name, string LineId)
         {
-            throw new NotImplementedException();
+            var bus = new Bus()
+            {
+                Id = Guid.NewGuid().ToString(),
+                BusLoginHash = name,
+                LineId = LineId,
+            };
+            await this.Buses.AddAsync(bus);
+            await this.Buses.SaveChangesAsync();
+            return this.Buses.All().Contains(bus);
         }
 
         public void DeleteBus(int id)
@@ -32,9 +54,9 @@ namespace BusGps.Services.Data
             throw new NotImplementedException();
         }
 
-        public IEnumerable<object> GetAllBuses()
+        public IEnumerable<Bus> GetAllBuses()
         {
-            throw new NotImplementedException();
+            return this.Buses.All().Include(x => x.Line);
         }
 
         public IEnumerable<object> GetAllBusOptions()
@@ -42,19 +64,14 @@ namespace BusGps.Services.Data
             throw new NotImplementedException();
         }
 
-        public Bus Getbus(int id)
+        public Bus Getbus(string id)
         {
-            throw new NotImplementedException();
+            return this.Buses.All().FirstOrDefault(x => x.Id == id);
         }
 
-        public object GetBusDetails(int id)
+        public IEnumerable<BusLine> GetLineOptions()
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<object> GetLineOptions()
-        {
-            throw new NotImplementedException();
+            return this.Lines.All();
         }
     }
 }

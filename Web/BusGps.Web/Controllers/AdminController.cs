@@ -24,23 +24,24 @@
             RoleManager = roleManager;
             AdminServices = services;
         }
+
         [HttpGet("/Admin/Drivers/AllDrivers")]
         public IActionResult AllDrivers()
         {
-            
             var model = UserManager.GetUsersInRoleAsync("Driver").Result.Select(x => new DriverInfo
             {
                 Username = x.UserName,
                 Bus = x.Bus == null ? "Not assigned" : x.Bus.BusLoginHash,
                 Line = x.Bus == null ? "Not assigned" : x.Bus.Line.Name,
-                Id = x.Id
+                Id = x.Id,
             }).ToList();
             return View("Drivers/AllDrivers", model);
         }
+
         [HttpGet("/Admin/Roles/AllUsers")]
         public IActionResult AllUsers()
         {
-            var model = UserManager.Users.Select(x => new UserInfo
+            var model = this.UserManager.Users.Select(x => new UserInfo
             {
                 Username = x.UserName,
                 Email = x.Email,
@@ -50,33 +51,53 @@
             return View("Roles/AllUsers", model);
         }
 
-        //[HttpGet("/Admin/Buses/AllBuses")]
-        //public IActionResult AllBuses()
-        //{
-        //    var model = new List<BusInfo>(AdminServices.GetAllBuses());
-        //    return View("Buses/AllBuses", model);
-        //}
+        [HttpGet("/Admin/Buses/AllBuses")]
+        public IActionResult AllBuses()
+        {
+            var model = new List<BusInfo>(this.AdminServices.GetAllBuses().Select(x => new BusInfo 
+            {
+                BusId = x.Id.ToString(),
+                BusName = x.BusLoginHash,
+                Line = x.Line.Name,
+                IsActive = x.IsActive.ToString(),
+            }));
+            return View("Buses/AllBuses", model);
+        }
 
-        //[HttpGet("/Admin/Buses/CreateBus")]
-        //public IActionResult CreateBus()
-        //{
-        //    var model = AdminServices.GetLineOptions();
-        //    return View("Buses/CreateBus", model);
-        //}
-        //[HttpPost("/Admin/Buses/CreateBus")]
-        //public IActionResult CreateBusPost(string BusName, int LineId)
-        //{
-        //    bool result = AdminServices.CreateBus(BusName, LineId);
-        //    if (result)
-        //        return Redirect("/Admin/Buses/AllBuses");
-        //    else throw new Exception("Failed Creation");
-        //}
-        //[HttpGet("/Admin/Buses/EditBus")]
-        //public IActionResult EditBus(int BusId)
-        //{
-        //    var model = AdminServices.GetBusDetails(BusId);
-        //    return View("Buses/EditBus", model);
-        //}
+        [HttpGet("/Admin/Buses/CreateBus")]
+        public IActionResult CreateBus()
+        {
+            var model = new List<LineOption>(this.AdminServices.GetLineOptions().Select(x => new LineOption
+            {
+                LineId = x.Id,
+                LineName = x.Name,
+            }));
+            return View("Buses/CreateBus", model);
+        }
+
+        [HttpPost("/Admin/Buses/CreateBus")]
+        public IActionResult CreateBusPost(string BusName, string LineId)
+        {
+            bool result = AdminServices.CreateBus(BusName, LineId).Result;
+            if (result) return Redirect("/Admin/Buses/AllBuses");
+            else throw new Exception("Failed Creation");
+            
+        }
+        [HttpGet("/Admin/Buses/EditBus")]
+        public IActionResult EditBus(string BusId)
+        {
+            var model = new EditBus
+            {
+                Id = this.AdminServices.Getbus(BusId).Id,
+                Name = this.AdminServices.Getbus(BusId).BusLoginHash,
+                LineOptions = this.AdminServices.GetLineOptions().Select(x => new LineOption
+                {
+                    LineId = x.Id,
+                    LineName = x.Name,
+                }),
+            };
+            return View("Buses/EditBus", model);
+        }
         //[HttpPost("/Admin/Buses/EditBus")]
         //public IActionResult EditBusPost(int BusId, string BusName, int LineId)
         //{

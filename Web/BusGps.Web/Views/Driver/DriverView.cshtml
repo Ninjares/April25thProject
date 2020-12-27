@@ -18,7 +18,7 @@
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
     <button onclick="EndDriving()">End driving session</button>
-    <script src="~/lib/@@microsoft/signalr/dist/browser/signalr.min.js"></script>
+    
     <script>
         var mymap = L.map('mapid');
         navigator.geolocation.getCurrentPosition((position) => mymap.setView([position.coords.latitude, position.coords.longitude], 14));
@@ -56,7 +56,7 @@
 
 
         fetch('/Driver/Route').then(x => x.json()).then(route => { console.log(route); L.polyline(route.coordinates, { color: route.colorHex }).addTo(mymap); });
-        fetch('/Driver/Stops').then(x => x.json()).then(stops => { stops.forEach((stop) => { L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap); }) });
+        fetch('/Driver/Stops').then(x => x.json()).then(stops => { console.log(stops); stops.forEach((stop) => { L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap); }) });
 
 
 
@@ -73,8 +73,7 @@
         mymap.on('click', onMapClick);
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(SuccessfulPosition);
-                navigator.geolocation.getCurrentPosition(Sendlocation);
+                navigator.geolocation.getCurrentPosition((position) => { driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap); });
             }
         }
         function showPosition(positionn) {
@@ -82,7 +81,7 @@
             L.marker([positionn.coords.latitude, positionn.coords.longitude], { icon: UserIcon }).addTo(mymap);
         }
         function SuccessfulPosition(position) {
-            driverlocation.setLatLng([position.coords.latitude + h, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
+            driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
         }
     </script>
 </body>

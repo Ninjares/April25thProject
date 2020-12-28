@@ -1,16 +1,17 @@
-﻿using System;
+﻿using BusGps.Data.Common.Repositories;
+using BusGps.Data.Models.AppModels;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BusGps.Services
+namespace BusGps.Services.Data
 {
     public class LocationService : ILocationService
     {
         private ConcurrentDictionary<string, double[]> DriverLocations;
         private ConcurrentDictionary<string, string> DriverBusname;
-
         public bool IsCalled { get; set; }
         public bool DriversAvialable { get => DriverLocations.Count != 0; }
 
@@ -36,13 +37,18 @@ namespace BusGps.Services
 
         }
 
+        public bool NameIncluded(string UserId)
+        {
+            return DriverBusname.ContainsKey(UserId);
+        }
+
         public object GetAllDrivers()
         {
             {
                 var buses = DriverLocations.Select(x => new
                 {
                     Id = x.Key,
-                    //BusLine = DriverBusname[x.Key],
+                    BusLine = DriverBusname[x.Key],
                     Location = x.Value
                 }).ToArray();
                 return buses;
@@ -53,9 +59,11 @@ namespace BusGps.Services
         {
             bool deleted = false;
             double[] placeholder;
+            string placeholder2;
             //while (!deleted)
             {
                 deleted = DriverLocations.TryRemove(UserId, out placeholder);
+                deleted = DriverBusname.TryRemove(UserId, out placeholder2);
             }
             //if (DriverLocations.Count == 0) IsCalled = false;
         }
@@ -63,6 +71,11 @@ namespace BusGps.Services
         public void Update(string UserId, double x, double y)
         {
             DriverLocations.AddOrUpdate(UserId, new double[] { x, y }, (k, v) => new double[] { x, y });
+            
+        }
+        public void UpdateName(string UserId, string busname)
+        {
+            DriverBusname.AddOrUpdate(UserId, busname, (k, v) => busname);
         }
     }
 }

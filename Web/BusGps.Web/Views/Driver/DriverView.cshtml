@@ -75,7 +75,7 @@
             driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
         }
 
-
+        let sessionended = false;
         let h = 0;
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         function Sendlocation(position) {
@@ -84,6 +84,7 @@
             h = h + 0.001;
         }
         function EndDriving() {
+            sessionended = true;
             console.log('End driving');
             connection.invoke("RemoveBus");
         }
@@ -91,9 +92,11 @@
             alert("All good! " + user + " " + x + " " + y);
         })
         connection.on("InvokeLocation", function () {
-            console.log("Invoked");
-            getLocation();
-            navigator.geolocation.getCurrentPosition(Sendlocation);
+            if (!sessionended) {
+                console.log("Invoked");
+                getLocation();
+                navigator.geolocation.getCurrentPosition(Sendlocation);
+            }
         })
         connection.start().catch(function (err) {
             return console.error(err.toString());

@@ -1,8 +1,11 @@
-﻿using BusGps.Data.Models;
-using BusGps.Services;
+﻿using BusGps.Data.Common.Repositories;
+using BusGps.Data.Models;
+using BusGps.Data.Models.AppModels;
+using BusGps.Services.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +18,23 @@ namespace BusGps.Web.Hubs
 
         public UserManager<ApplicationUser> UserManager { get; set; }
         public ILocationService LocationService { get; set; }
-        public GpsHub(UserManager<ApplicationUser> userManager, ILocationService service)
+        public IDeletableEntityRepository<Bus> Buses { get; set; }
+        public GpsHub(UserManager<ApplicationUser> userManager, ILocationService service, IDeletableEntityRepository<Bus> buses)
         {
-            UserManager = userManager;
-            LocationService = service;
+            this.UserManager = userManager;
+            this.LocationService = service;
+            this.Buses = buses;
         }
         [Authorize(Roles = "Driver")]
         public async Task UpdateLocation(double x, double y)
         {
             string UserId = UserManager.GetUserId(this.Context.User);
+            if (!LocationService.NameIncluded(UserId))
+            { 
+                var bus = this.Buses.All().Include(x => x.Driver).Include(x => x.Line).FirstOrDefault(x => x.Driver.Id == UserId);
+                string name = $"{bus.Line.Name} - {bus.BusLoginHash}";
+                LocationService.UpdateName(UserId, name);
+            }
             LocationService.Update(UserId, x, y);
             //await this.Clients.All.SendAsync("AllGood", "user", x, y);
             //Task.Factory.StartNew(() => GetAllDrivers(), TaskCreationOptions.RunContinuationsAsynchronously);

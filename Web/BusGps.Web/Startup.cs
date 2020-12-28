@@ -8,7 +8,6 @@
     using BusGps.Data.Models;
     using BusGps.Data.Repositories;
     using BusGps.Data.Seeding;
-    using BusGps.Services;
     using BusGps.Services.Data;
     using BusGps.Services.Mapping;
     using BusGps.Services.Messaging;

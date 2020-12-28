@@ -28,14 +28,15 @@ namespace BusGps.Web.Hubs
         [Authorize(Roles = "Driver")]
         public async Task UpdateLocation(double x, double y)
         {
-            string UserId = UserManager.GetUserId(this.Context.User);
-            if (!LocationService.NameIncluded(UserId))
+            string UserId = this.UserManager.GetUserId(this.Context.User);
+            if (!this.LocationService.NameIncluded(UserId))
             { 
                 var bus = this.Buses.All().Include(x => x.Driver).Include(x => x.Line).FirstOrDefault(x => x.Driver.Id == UserId);
                 string name = $"{bus.Line.Name} - {bus.BusLoginHash}";
                 LocationService.UpdateName(UserId, name);
-            }
+            };
             LocationService.Update(UserId, x, y);
+
             //await this.Clients.All.SendAsync("AllGood", "user", x, y);
             //Task.Factory.StartNew(() => GetAllDrivers(), TaskCreationOptions.RunContinuationsAsynchronously);
             //Console.WriteLine();

@@ -20,15 +20,28 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
+                        @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                        {
+                        @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
+                        </li>*@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" href="/Admin/Roles/AllUsers" title="Admin">Users</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
+                            <a class="nav-link text-dark" href="/Admin/Drivers/AllDrivers" title="Admin">Drivers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" href="/Admin/Buses/AllBuses" title="Admin">Buses</a>
                         </li>
+
+                        }
+                        else if (this.User.IsInRole(GlobalConstants.DriverRoleName))
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="Driver/DriverView" title="Drive">Drive</a>
+                        </li>
+                        }
                     </ul>
                 </div>
             </div>

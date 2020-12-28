@@ -8,30 +8,10 @@
     @if (this.SignInManager.IsSignedIn(this.User))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @this.User.Identity.Name!</a>
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @this.User.Identity.Name!
+            @(UserManager.GetRolesAsync(UserManager.GetUserAsync(this.User).Result).Result.FirstOrDefault() == null ? "" : "Your role is " + UserManager.GetRolesAsync(UserManager.GetUserAsync(this.User).Result).Result.FirstOrDefault())</a>
         </li>
-        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-        {
-            @*<li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
-                </li>*@
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/Admin/Roles/AllUsers" title="Admin">Users</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/Admin/Drivers/AllDrivers" title="Admin">Drivers</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="/Admin/Buses/AllBuses" title="Admin">Buses</a>
-            </li>
 
-        }
-        if (this.User.IsInRole(GlobalConstants.DriverRoleName))
-        {
-            <li class="nav-item">
-                <a class="nav-link text-dark" href="Driver/DriverView" title="Drive">Drive</a>
-            </li>
-        }
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@this.Url.Action("Index", "Home", new { area = string.Empty })">
                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>

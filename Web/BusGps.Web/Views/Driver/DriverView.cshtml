@@ -18,7 +18,7 @@
     </div>
     <button onclick="getLocation()">Get Geolocation</button>
     <button onclick="EndDriving()">End driving session</button>
-    
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script>
         var mymap = L.map('mapid');
         navigator.geolocation.getCurrentPosition((position) => mymap.setView([position.coords.latitude, position.coords.longitude], 14));
@@ -46,15 +46,6 @@
             iconAnchor: [20, 20]
         })
 
-        function looper() {
-            getLocation();
-            if (true) {
-                setTimeout(looper, 1000)
-            }
-        }
-        looper();
-
-
         fetch('/Driver/Route').then(x => x.json()).then(route => { console.log(route); L.polyline(route.coordinates, { color: route.colorHex }).addTo(mymap); });
         fetch('/Driver/Stops').then(x => x.json()).then(stops => { console.log(stops); stops.forEach((stop) => { L.marker(stop.point, { icon: StopIcon }).bindPopup(stop.address).addTo(mymap); }) });
 
@@ -73,7 +64,7 @@
         mymap.on('click', onMapClick);
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => { driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap); });
+                navigator.geolocation.getCurrentPosition((position) => { driverlocation.setLatLng([position.coords.latitude + h, position.coords.longitude]).setIcon(UserIcon).addTo(mymap); });
             }
         }
         function showPosition(positionn) {
@@ -83,5 +74,39 @@
         function SuccessfulPosition(position) {
             driverlocation.setLatLng([position.coords.latitude, position.coords.longitude]).setIcon(UserIcon).addTo(mymap);
         }
+
+
+        let h = 0;
+        var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
+        function Sendlocation(position) {
+            connection.invoke("UpdateLocation", position.coords.latitude + h, position.coords.longitude);
+            h = h + 0.001;
+        }
+        function EndDriving() {
+            console.log('End driving');
+            connection.invoke("RemoveBus");
+        }
+        connection.on("AllGood", function (user, x, y) {
+            alert("All good! " + user + " " + x + " " + y);
+        })
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        //document.GetElementById("sendButton").addEventListener("click", e => {
+        //    e.preventDefault();
+
+        //});
+        window.addEventListener('beforeunload', () => {
+            EndDriving();
+        });
+        function looper() {
+            getLocation();
+            navigator.geolocation.getCurrentPosition(Sendlocation)
+            if (true) {
+                setTimeout(looper, 1000)
+            }
+        }
+        looper();
     </script>
 </body>

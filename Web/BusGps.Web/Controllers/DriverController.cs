@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BusGps.Web.Controllers
 {
     [Authorize(Roles = "Driver")]
-    public class DriverController : Controller
+    public class DriverController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IDriverService driverService;

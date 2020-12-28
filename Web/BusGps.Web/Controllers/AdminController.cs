@@ -14,7 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize(Roles = "Administrator")]
-    public class AdminController : Controller
+    public class AdminController : BaseController
     {
         public IAdminService AdminServices { get; set; }
         private UserManager<ApplicationUser> UserManager { get; set; }

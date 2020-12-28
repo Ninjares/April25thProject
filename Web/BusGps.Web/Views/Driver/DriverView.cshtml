@@ -80,6 +80,7 @@
         var connection = new signalR.HubConnectionBuilder().withUrl("/gps").build();
         function Sendlocation(position) {
             connection.invoke("UpdateLocation", position.coords.latitude + h, position.coords.longitude);
+            console.log("sent");
             h = h + 0.001;
         }
         function EndDriving() {
@@ -88,6 +89,11 @@
         }
         connection.on("AllGood", function (user, x, y) {
             alert("All good! " + user + " " + x + " " + y);
+        })
+        connection.on("InvokeLocation", function () {
+            console.log("Invoked");
+            getLocation();
+            navigator.geolocation.getCurrentPosition(Sendlocation);
         })
         connection.start().catch(function (err) {
             return console.error(err.toString());
@@ -100,13 +106,13 @@
         window.addEventListener('beforeunload', () => {
             EndDriving();
         });
-        function looper() {
-            getLocation();
-            navigator.geolocation.getCurrentPosition(Sendlocation)
-            if (true) {
-                setTimeout(looper, 1000)
-            }
-        }
-        looper();
+        //function looper() {
+        //    getLocation();
+        //    navigator.geolocation.getCurrentPosition(Sendlocation)
+        //    if (true) {
+        //        setTimeout(looper, 1000)
+        //    }
+        //}
+        //looper();
     </script>
 </body>

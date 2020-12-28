@@ -45,8 +45,9 @@ namespace BusGps.Web.Hubs
                 LocationService.IsCalled = true;
                 while (true)
                 {
-                    Task t = Task.Delay(2000);
+                    Task t = Task.Delay(1000);
                     {
+                        await this.Clients.All.SendAsync("InvokeLocation");
                         if (LocationService.DriversAvialable)
                         {
                             var buses = LocationService.GetAllDrivers();
